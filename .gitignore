@@ -15,5 +15,6 @@ txt/
 *.xml~
 *.mp3
 *.pyc
-*.txt
-*.in~
+*.d
+*.so
+*.root

@@ -1,8 +1,8 @@
 
 //_____________________________________________________________________________
 void RunFilterMaker(string filelist="txt/sim_slight14e1x1.list",
-                    Int_t nFiles=358,
-                    string outfile="../star-upcDst-data/trees/StUPC_slight14e1x1_v2.root") {
+                    Int_t nFiles=999999,
+                    string outfile="/gpfs01/star/pwg/jaroslav/star-upcDst-data/test_productions/mc/StUPC_slight14e1x1.root") {
 
   //load libraries to work with muDst
   gROOT->Macro("loadMuDst.C");
