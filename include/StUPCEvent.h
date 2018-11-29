@@ -34,12 +34,21 @@ public:
   void setBunchCrossId7bit(UInt_t id) { mbCrossId7bit = id; }
   void setMagneticField(Double_t mag) { mMagField = mag; }
 
+  void setZDCEastRate(Double_t rate) { mZdcEastRate = rate; }
+  void setZDCWestRate(Double_t rate) { mZdcWestRate = rate; }
+  void setZDCCoincRate(Double_t rate) { mZdcCoincRate = rate; }
+
   void setLastDSM0(UShort_t dsm) { mLastDSM0 = dsm; }
   void setLastDSM1(UShort_t dsm) { mLastDSM1 = dsm; }
   void setLastDSM3(UShort_t dsm) { mLastDSM3 = dsm; }
 
   void setZDCUnAttEast(UShort_t signal) { mZdcEastUA = signal; }
   void setZDCUnAttWest(UShort_t signal) { mZdcWestUA = signal; }
+  void setZDCEastADC(UShort_t signal, Int_t pmt);
+  void setZDCWestADC(UShort_t signal, Int_t pmt);
+  void setZDCEastTDC(UShort_t time) { mZdcEastTDC = time; }
+  void setZDCWestTDC(UShort_t time) { mZdcWestTDC = time; }
+  void setZDCTimeDiff(UShort_t deltaT) { mZdcTimeDiff = deltaT; }
   void setZdcVertexZ(Float_t vtx) { mZdcVertexZ = vtx; }
 
   void setBBCSmallEast(UInt_t sum) { mBBCSmallEast = sum; }
@@ -49,10 +58,15 @@ public:
 
   void setVPDSumEast(UShort_t sum) { mVPDSumEast = sum; }
   void setVPDSumWest(UShort_t sum) { mVPDSumWest = sum; }
+  void setVPDTimeDiff(UShort_t deltaT) { mVPDTimeDiff = deltaT; }
 
   void setTOFMultiplicity(UShort_t tof) { mTofMult = tof; }
   void setNTofHit(UInt_t tof) { mNTofHit = tof; }
   void setBEMCMultiplicity(UInt_t be) { mBemcMult = be; }
+
+  void setNGlobTracks(Int_t ntrk) { mNGlobTracks = ntrk; }
+  void setNPrimTracks(Int_t ntrk) { mNPrimTracks = ntrk; }
+  void setNPrimVertices(UInt_t nvtx) { mNPrimVertices = nvtx; }
 
   StUPCTrack *addTrack();
 
@@ -72,12 +86,21 @@ public:
   UInt_t getBunchCrossId7bit() const { return mbCrossId7bit; }
   Double_t getMagneticField() const { return mMagField; }
 
+  Double_t getZDCEastRate() const { return mZdcEastRate; }
+  Double_t getZDCWestRate() const { return mZdcWestRate; }
+  Double_t getZDCCoincRate() const { return mZdcCoincRate; }
+
   UShort_t getLastDSM0() const { return mLastDSM0; }
   UShort_t getLastDSM1() const { return mLastDSM1; }
   UShort_t getLastDSM3() const { return mLastDSM3; }
 
   UShort_t getZDCUnAttEast() const { return mZdcEastUA; }
   UShort_t getZDCUnAttWest() const { return mZdcWestUA; }
+  UShort_t getZDCEastADC(Int_t pmt) const { return mZdcEastADC[pmt-1]; }
+  UShort_t getZDCWestADC(Int_t pmt) const { return mZdcWestADC[pmt-1]; }
+  UShort_t getZDCEastTDC() const { return mZdcEastTDC; }
+  UShort_t getZDCWestTDC() const { return mZdcWestTDC; }
+  UShort_t getZDCTimeDiff() const { return mZdcTimeDiff; }
   Float_t getZdcVertexZ() const { return mZdcVertexZ/10.; } // convert from mm to cm
 
   UInt_t getBBCSmallEast() const { return mBBCSmallEast; }
@@ -87,10 +110,15 @@ public:
 
   UShort_t getVPDSumEast() const { return mVPDSumEast; }
   UShort_t getVPDSumWest() const { return mVPDSumWest; }
+  UShort_t getVPDTimeDiff() const { return mVPDTimeDiff; }
 
   UShort_t getTOFMultiplicity() const { return mTofMult; }
   UInt_t getNTofHit() const { return mNTofHit; }
   UInt_t getBEMCMultiplicity() const { return mBemcMult; }
+
+  Int_t getNGlobTracks() const { return mNGlobTracks; }
+  Int_t getNPrimTracks() const { return mNPrimTracks; }
+  UInt_t getNPrimVertices() const { return mNPrimVertices; }
 
   Int_t getNumberOfTracks() const;
   StUPCTrack *getTrack(Int_t iTrack) const;
@@ -123,12 +151,22 @@ private:
   UInt_t mbCrossId7bit; // bunch crossing ID 7bit
   Double32_t mMagField; // magnetic field
 
+  Double32_t mZdcEastRate; // ZDC rate, east
+  Double32_t mZdcWestRate; // ZDC rate, west
+  Double32_t mZdcCoincRate; // ZDC rate, east&&west coincidence
+
   UShort_t mLastDSM0; // TCU bits 0-15 from StTriggerData::lastDSM(0)
   UShort_t mLastDSM1; // TCU bits 16-31
   UShort_t mLastDSM3; // TCU bits 58-62
 
   UShort_t mZdcEastUA; // ZDC unattenuated signal, east
   UShort_t mZdcWestUA; // ZDC unattenuated signal, west
+  static const Int_t mNZdcPmt = 3;
+  UShort_t mZdcEastADC[mNZdcPmt]; // ZDC 3 PMT ADCs, east
+  UShort_t mZdcWestADC[mNZdcPmt]; // ZDC 3 PMT ADCs, west
+  UShort_t mZdcEastTDC; // ZDC TDC, east
+  UShort_t mZdcWestTDC; // ZDC TDC, west
+  UShort_t mZdcTimeDiff; // ZDC time difference, east-west
   Float_t mZdcVertexZ; // ZDC vertex z position, mm
 
   UInt_t mBBCSmallEast; // BBC truncated sum, small tiles, east
@@ -138,10 +176,15 @@ private:
 
   UShort_t mVPDSumEast; // VPD ADC sum east
   UShort_t mVPDSumWest; // VPD ADC sum west
+  UShort_t mVPDTimeDiff; // VPD time difference
 
   UShort_t mTofMult; // TOF multiplicity from StTriggerData
   UInt_t mNTofHit; // number of TOF hits from StMuDst::numberOfTofHit
   UInt_t mBemcMult; // BEMC multiplicity, number of all BEMC clusters in event
+
+  Int_t mNGlobTracks; // number of global tracks
+  Int_t mNPrimTracks; // number of primary tracks
+  UInt_t mNPrimVertices; // number of primary vertices
 
   static TClonesArray *mgUPCTracks; // array of upc tracks
   TClonesArray *mUPCTracks; //-> array of upc tracks
@@ -159,7 +202,7 @@ private:
   TClonesArray *mMCParticles; // array of MC particles
   Int_t mNmc; //! number of mc particles in event, local use when filling
 
-  ClassDef(StUPCEvent, 1);
+  ClassDef(StUPCEvent, 2);
 };
 
 #endif

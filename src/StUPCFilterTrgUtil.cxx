@@ -46,6 +46,13 @@ void StUPCFilterTrgUtil::runZDC(const StTriggerData *trgdat, StUPCEvent *upcEvt)
 
   upcEvt->setZDCUnAttEast( trgdat->zdcUnAttenuated(east) );
   upcEvt->setZDCUnAttWest( trgdat->zdcUnAttenuated(west) );
+  for (Int_t ipmt=1; ipmt<=3; ipmt++) {
+    upcEvt->setZDCEastADC( trgdat->zdcADC(east, ipmt), ipmt );
+    upcEvt->setZDCWestADC( trgdat->zdcADC(west, ipmt), ipmt );
+  }
+  upcEvt->setZDCEastTDC( trgdat->zdcTDC(east) );
+  upcEvt->setZDCWestTDC( trgdat->zdcTDC(west) );
+  upcEvt->setZDCTimeDiff( trgdat->zdcTimeDifference() );
   upcEvt->setZdcVertexZ( trgdat->zdcVertexZ() );
 
 }//runZDC
@@ -63,6 +70,8 @@ void StUPCFilterTrgUtil::runVPD(const StTriggerData *trgdat, StUPCEvent *upcEvt)
   }//pmt loop
   upcEvt->setVPDSumEast( sum_east );
   upcEvt->setVPDSumWest( sum_west );
+
+  upcEvt->setVPDTimeDiff( trgdat->vpdTimeDifference() );
 
 }//runVPD
 

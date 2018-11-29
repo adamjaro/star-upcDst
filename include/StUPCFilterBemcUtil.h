@@ -43,7 +43,8 @@ private:
   //BEMC clusters, structure and vector for writing clusters to UPC trees,
   //it allows to write only clusters matched to a track
   struct emcCluster {
-    emcCluster(): clsEta(0), clsPhi(0), clsSigmaEta(0), clsSigmaPhi(0), clsE(0), isMatched(0) {}
+    emcCluster(): clsEta(0), clsPhi(0), clsSigmaEta(0), clsSigmaPhi(0), clsE(0), isMatched(0),
+      clsHT(0), clsHTsoftID(0) {}
     Float_t clsEta;
     Float_t clsPhi;
     Float_t clsSigmaEta;
@@ -51,6 +52,7 @@ private:
     Float_t clsE;
     Bool_t isMatched;
     Float_t clsHT;
+    Int_t clsHTsoftID;
   };
   emcCluster mEmcCluster; // object of cluster structure
 

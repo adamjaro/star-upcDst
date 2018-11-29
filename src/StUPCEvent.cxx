@@ -28,10 +28,14 @@ TClonesArray *StUPCEvent::mgMCParticles = 0;
 //_____________________________________________________________________________
 StUPCEvent::StUPCEvent():
   mRunNum(0), mEvtNum(0), mFillNum(0), mbCrossId(0), mbCrossId7bit(0),
-  mMagField(0), mLastDSM0(0), mLastDSM1(0), mLastDSM3(0),
-  mZdcEastUA(0), mZdcWestUA(0), mZdcVertexZ(0), mBBCSmallEast(0), mBBCSmallWest(0),
-  mBBCLargeEast(0), mBBCLargeWest(0), mVPDSumEast(0), mVPDSumWest(0),
+  mMagField(0), mZdcEastRate(0), mZdcWestRate(0), mZdcCoincRate(0),
+  mLastDSM0(0), mLastDSM1(0), mLastDSM3(0),
+  mZdcEastUA(0), mZdcWestUA(0), mZdcEastTDC(0), mZdcWestTDC(0),
+  mZdcTimeDiff(0), mZdcVertexZ(0),
+  mBBCSmallEast(0), mBBCSmallWest(0), mBBCLargeEast(0), mBBCLargeWest(0),
+  mVPDSumEast(0), mVPDSumWest(0), mVPDTimeDiff(0),
   mTofMult(0), mNTofHit(0), mBemcMult(0),
+  mNGlobTracks(0), mNPrimTracks(0),mNPrimVertices(0),
   mUPCTracks(0x0), mNtracks(0),
   mUPCBemcClusters(0x0), mNclusters(0),
   mUPCVertices(0x0), mNvertices(0),
@@ -40,6 +44,11 @@ StUPCEvent::StUPCEvent():
   //default constructor
 
   mTrgIDs.Set(0);
+
+  for (Int_t ipmt=0; ipmt<mNZdcPmt; ipmt++) {
+    mZdcEastADC[ipmt] = 0;
+    mZdcWestADC[ipmt] = 0;
+  }
 
   if(!mgUPCTracks) {
     mgUPCTracks = new TClonesArray("StUPCTrack");
@@ -112,6 +121,28 @@ void StUPCEvent::addTriggerId(Int_t id) {
   mTrgIDs.AddAt(id, pos);
 
 }//addTriggerId
+
+//_____________________________________________________________________________
+void StUPCEvent::setZDCEastADC(UShort_t signal, Int_t pmt) {
+
+  //set ZDC PMT signal, check for bounds, east side
+  Int_t idx = pmt - 1;
+  if( idx < 0 or idx > mNZdcPmt-1 ) return;
+
+  mZdcEastADC[idx] = signal;
+
+}//setZDCEastADC
+
+//_____________________________________________________________________________
+void StUPCEvent::setZDCWestADC(UShort_t signal, Int_t pmt) {
+
+  //set ZDC PMT signal, check for bounds, west side
+  Int_t idx = pmt - 1;
+  if( idx < 0 or idx > mNZdcPmt-1 ) return;
+
+  mZdcWestADC[idx] = signal;
+
+}//setZDCWestADC
 
 //_____________________________________________________________________________
 StUPCTrack *StUPCEvent::addTrack()

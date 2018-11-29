@@ -45,6 +45,7 @@ public:
 
   void setChi2(Double_t chi2) { mChi2 = chi2; }
 
+  void setNhitsDEdx(UShort_t nh) { mNhitsDEdx = nh; }
   void setDEdxSignal(Double_t de) { mDEdxSignal = de; }
   void setNSigmasTPC(Part pt, Float_t nsig) { mNSigmasTPC[pt] = nsig; }
 
@@ -79,6 +80,7 @@ public:
 
   Double_t getChi2() const { return mChi2; }
 
+  UShort_t getNhitsDEdx() const { return mNhitsDEdx; }
   Double_t getDEdxSignal() const { return mDEdxSignal; }
   Float_t getNSigmasTPC(Part pt) const { return mNSigmasTPC[pt]; }
   Float_t getNSigmasTPCElectron() const { return mNSigmasTPC[kElectron]; }
@@ -125,6 +127,7 @@ private:
 
   Double32_t mChi2; // chi2 of fit
 
+  UShort_t mNhitsDEdx; // number of hits used for dE/dx measurement
   Double32_t mDEdxSignal; // measured dE/dx value
   static const Int_t mNpart = 4; // number of particle species with dE/dx identification
   Float16_t mNSigmasTPC[mNpart]; // dE/dx n sigmas for particle species
@@ -142,7 +145,7 @@ private:
 
   StUPCEvent *mEvt; //! pointer to current event, local use only
 
-  ClassDef(StUPCTrack, 1)
+  ClassDef(StUPCTrack, 2)
 
 };
 

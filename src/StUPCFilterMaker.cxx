@@ -30,6 +30,8 @@
 #include "StMuDSTMaker/COMMON/StMuMcTrack.h"
 #include "StMuDSTMaker/COMMON/StMuMcVertex.h"
 #include "StEvent/StTriggerData.h"
+#include "StEvent/StRunInfo.h"
+#include "StEvent/StEventSummary.h"
 
 //local headers
 #include "StUPCEvent.h"
@@ -207,7 +209,13 @@ Int_t StUPCFilterMaker::Make()
   mUPCEvent->setBunchCrossId7bit( l0trig.bunchCrossingId7bit(runnum) );
 
   //magnetic field in UPC event
-  mUPCEvent->setMagneticField( evt->eventSummary().magneticField() );
+  const StEventSummary &evtSummary = evt->eventSummary();
+  mUPCEvent->setMagneticField( evtSummary.magneticField() );
+
+  //ZDC rates
+  mUPCEvent->setZDCEastRate( runInfo.zdcEastRate() );
+  mUPCEvent->setZDCWestRate( runInfo.zdcWestRate() );
+  mUPCEvent->setZDCCoincRate( runInfo.zdcCoincidenceRate() );
 
   //trigger data for DSM, ZDC, BBC and TOF
   const StTriggerData *trgdat = evt->triggerData();
@@ -224,9 +232,14 @@ Int_t StUPCFilterMaker::Make()
   //TOF number of hits from StMuDst
   mUPCEvent->setNTofHit( mMuDst->numberOfTofHit() );
 
+  //number of global, primary tracks and vertices
+  mUPCEvent->setNGlobTracks( evtSummary.numberOfGoodTracks() );
+  mUPCEvent->setNPrimTracks( evtSummary.numberOfGoodPrimaryTracks() );
+  mUPCEvent->setNPrimVertices( mMuDst->numberOfPrimaryVertices() );
+
   //BEMC util
   //magnetic field for track projection to BEMC
-  mBemcUtil->setMagField( evt->eventSummary().magneticField()/10. ); //conversion ok, checked by track->pt() and emcPt
+  mBemcUtil->setMagField( evtSummary.magneticField()/10. ); //conversion ok, checked by track->pt() and emcPt
   //fill structures with clusters and hits
   if( mBemcUtil->processEvent(mMuDst, mUPCEvent) ) mCounter->Fill( kBemc ); // events having BEMC clusters
 
@@ -273,6 +286,7 @@ Int_t StUPCFilterMaker::Make()
       upcTrack->setNhits( track->nHits() );
       upcTrack->setNhitsFit( track->nHitsFit() );
       upcTrack->setChi2( track->chi2() );
+      upcTrack->setNhitsDEdx( track->nHitsDedx() );
       upcTrack->setDEdxSignal( track->dEdx() );
       upcTrack->setNSigmasTPC( StUPCTrack::kElectron, track->nSigmaElectron() );
       upcTrack->setNSigmasTPC( StUPCTrack::kPion, track->nSigmaPion() );

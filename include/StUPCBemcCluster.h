@@ -25,6 +25,7 @@ public:
   void setId(UInt_t id) { mId = id; }
 
   void setHTEnergy(Float_t en) { mHTEnergy = en; }
+  void setHTsoftID(Int_t id) { mHTsoftID = id; }
 
   //getters
   Float_t getEta() const { return mEta; }
@@ -35,6 +36,7 @@ public:
   UInt_t getId() const { return mId; }
 
   Float_t getHTEnergy() const { return mHTEnergy; }
+  Int_t getHTsoftID() const { return mHTsoftID; }
 
 private:
 
@@ -47,15 +49,16 @@ private:
   Float_t mSigmaPhi; // sigma of phi
   Float_t mEnergy; // energy of cluster;
   UInt_t mId; // original ID
-  Float_t mHTEnergy; // high tower energy in cluster
+
+  Float_t mHTEnergy; // energy of highest energy cell in cluster (high tower)
+  Int_t mHTsoftID; // softID of highest energy cell
 
 
 
 
 
 
-
-  ClassDef(StUPCBemcCluster, 1)
+  ClassDef(StUPCBemcCluster, 2)
 
 };
 

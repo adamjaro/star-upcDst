@@ -93,6 +93,7 @@ Bool_t StUPCFilterBemcUtil::processEvent(StMuDst *muDst, StUPCEvent *upcEvt) {
     const StPtrVecEmcRawHit &hits = cls->hit();
 
     Float_t htEn = -9999.; // high tower hit energy
+    Int_t htID = -9999; // high tower softID
 
     //hits loop
     for(UInt_t ihit=0; ihit<hits.size(); ihit++) {
@@ -112,8 +113,11 @@ Bool_t StUPCFilterBemcUtil::processEvent(StMuDst *muDst, StUPCEvent *upcEvt) {
       //hit energy
       Float_t en = rawhit->energy();
       mEmcHit.hitE = en;
-      //high tower energy
-      if( en > htEn ) htEn = en;
+      //high tower energy and softID
+      if( en > htEn ) {
+        htEn = en;
+        htID = emcSoftId;
+      }
       mVecEmcHits->push_back( mEmcHit );
 
     }//hits loop
@@ -125,6 +129,7 @@ Bool_t StUPCFilterBemcUtil::processEvent(StMuDst *muDst, StUPCEvent *upcEvt) {
     mEmcCluster.clsSigmaPhi = cls->sigmaPhi();
     mEmcCluster.clsE = cls->energy();
     mEmcCluster.clsHT = htEn;
+    mEmcCluster.clsHTsoftID = htID;
     mEmcCluster.isMatched = kFALSE;
     mVecEmcCluster->push_back( mEmcCluster ); //write cluster to vector
     nCls++; //increment number of clusters writtent to vector
@@ -186,13 +191,14 @@ void StUPCFilterBemcUtil::writeBEMC(StUPCEvent *upcEvt) {
     if( !cluster->isMatched ) continue;
 
     //put cluster in clones array in UPC event
-    StUPCBemcCluster *upcCls =  upcEvt->addCluster();
+    StUPCBemcCluster *upcCls = upcEvt->addCluster();
     upcCls->setEta( cluster->clsEta );
     upcCls->setPhi( cluster->clsPhi );
     upcCls->setSigmaEta( cluster->clsSigmaEta );
     upcCls->setSigmaPhi( cluster->clsSigmaPhi );
     upcCls->setEnergy( cluster->clsE );
     upcCls->setHTEnergy( cluster->clsHT );
+    upcCls->setHTsoftID( cluster->clsHTsoftID );
     //cluster ID as position of cluster in clusters vector
     upcCls->setId( (UInt_t) distance(mVecEmcCluster->cbegin(), cluster) );
 
