@@ -18,3 +18,5 @@ txt/
 *.d
 *.so
 *.root
+*.txt~
+*.cxx~
