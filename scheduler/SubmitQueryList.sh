@@ -3,17 +3,19 @@
 #submit for a given list of catalog queries
 
 #top directory for all outputs
-top="/gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/BEMC_TOF_14"
+top="/gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_main_JpsiB_10_11_14"
 
 #names for individual query outputs
-qnames=("prod" "log" "mid" "high")
+qnames=("r10" "r11" "r14_prod" "r14_low" "r14_mid" "r14_high")
 
 #catalog queries
 qlist=(
-  "production=P16id,trgsetupname=AuAu_200_production_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local,runnumber[]15078073-15167014"
-  "production=P16id,trgsetupname=AuAu_200_production_low_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local,runnumber[]15078073-15167014"
-  "production=P16id,trgsetupname=AuAu_200_production_mid_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local,runnumber[]15078073-15167014"
-  "production=P16id,trgsetupname=AuAu_200_production_high_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local,runnumber[]15078073-15167014"
+  "production=P10ik,trgsetupname=AuAu200_production,filetype=daq_reco_MuDst,filename~st_upc,storage=local"
+  "production=P11id,trgsetupname=AuAu200_production_2011,filetype=daq_reco_MuDst,filename~st_upc,storage=local"
+  "production=P16id,trgsetupname=AuAu_200_production_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local"
+  "production=P16id,trgsetupname=AuAu_200_production_low_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local"
+  "production=P16id,trgsetupname=AuAu_200_production_mid_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local"
+  "production=P16id,trgsetupname=AuAu_200_production_high_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local"
 )
 
 #macro to run the maker

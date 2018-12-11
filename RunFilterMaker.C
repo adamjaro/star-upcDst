@@ -45,13 +45,18 @@ void RunFilterMaker(string filelist="txt/sim_slight14e1x1.list",
   //Configure the analysis maker
   //
   //data/MC
-  anaMaker->setIsMC(2); // 0 - data,  1 - starsim MC,  2 - embedding MC
+  anaMaker->setIsMC(0); // 0 - data,  1 - starsim MC,  2 - embedding MC
   //
   //set trigger IDs
-  anaMaker->addTriggerId(450705, 15084052, 15167014); // UPCJpsiB, Run14 AuAu, 1st id
+  anaMaker->addTriggerId(450705, 15084051, 15167014); // UPCJpsiB, Run14 AuAu, 1st id
   anaMaker->addTriggerId(450725, 15153036, 15167007); // UPCJpsiB, Run14 AuAu, 2nd id
   anaMaker->addTriggerId(450701, 15078073, 15167014); // UPC-main, Run14 AuAu, 1st id
   anaMaker->addTriggerId(450711, 15153036, 15167007); // UPC-main, Run14 AuAu, 2nd id
+  anaMaker->addTriggerId(260750, 11039042, 11077018); // UPC_main, run 10 AuAu, 1st id
+  anaMaker->addTriggerId(270601, 11089036, 11098056); // upc_main, run 10 AuAu, 2nd id
+  anaMaker->addTriggerId(260750, 12122025, 12122025); // UPC_main, run 11 AuAu, 1st id
+  anaMaker->addTriggerId(350007, 12146003, 12152016); // UPC_main, run 11 AuAu, 2nd id
+  anaMaker->addTriggerId(350017, 12153002, 12179051); // UPC_main, run 11 AuAu, 3rd id
   //
   // use BEMC cluster conditions below if set to true
   Bool_t useClusterParam = kFALSE;
