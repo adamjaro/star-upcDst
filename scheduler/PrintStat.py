@@ -7,7 +7,7 @@ import sys
 #_____________________________________________________________________________
 if __name__ == "__main__":
 
-    basedir="/gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_main_JpsiB_10_11_14/*"
+    basedir="/gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_main_JpsiB_10_11_14_v2/*"
 
 
     #command line argumets

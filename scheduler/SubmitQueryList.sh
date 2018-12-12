@@ -3,7 +3,7 @@
 #submit for a given list of catalog queries
 
 #top directory for all outputs
-top="/gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_main_JpsiB_10_11_14"
+top="/gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_main_JpsiB_10_11_14_v2"
 
 #names for individual query outputs
 qnames=("r10" "r11" "r14_prod" "r14_low" "r14_mid" "r14_high")

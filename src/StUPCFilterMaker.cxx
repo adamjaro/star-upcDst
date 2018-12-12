@@ -243,8 +243,45 @@ Int_t StUPCFilterMaker::Make()
   //fill structures with clusters and hits
   if( mBemcUtil->processEvent(mMuDst, mUPCEvent) ) mCounter->Fill( kBemc ); // events having BEMC clusters
 
+  //mark primary vertices with at least one TOF or BEMC matched track
+  map<UInt_t, Bool_t> vtxMap;
+  //vertex map loop
+  for(UInt_t ivtx=0; ivtx<mMuDst->numberOfPrimaryVertices(); ivtx++) {
+    StMuDst::setVertexIndex(ivtx);
+
+    //initialize the map
+    vtxMap[ivtx] = kFALSE;
+
+    //run over tracks for this vertex
+    TObjArray *trkArray = mMuDst->primaryTracks();
+    for(Int_t itrk=0; itrk<trkArray->GetEntriesFast(); itrk++) {
+      StMuTrack *track = dynamic_cast<StMuTrack*>( trkArray->At(itrk) );
+      //evaluate the matching
+      //BEMC
+      UInt_t clsId=0;
+      Double_t emcPhi=-999., emcEta=-999., emcPt=-999.;
+      Bool_t emcProj=kFALSE;
+      Float_t hitE=-999.;
+      Short_t nhitsBemc = mBemcUtil->matchBEMC(track, emcPhi, emcEta, emcPt, emcProj, clsId, hitE);
+      Bool_t matchBemc = nhitsBemc > 0 ? kTRUE : kFALSE;
+      //TOF
+      const StMuBTofPidTraits &tofPid = track->btofPidTraits();
+      Bool_t matchTof = tofPid.matchFlag() != 0 ? kTRUE : kFALSE;
+
+      //mark current primary vertex as having matched track
+      if( matchBemc == kTRUE or matchTof == kTRUE ) {
+        vtxMap[ivtx] = kTRUE;
+        break;
+      }
+    }//tracks for this vertex
+  }//vertex map loop
+
   //vertex loop
   for(UInt_t ivtx=0; ivtx<mMuDst->numberOfPrimaryVertices(); ivtx++) {
+    //select only vertices with at least one matched track
+    //only in data or embedding MC
+    if( mIsMC != 1 && vtxMap[ivtx] == kFALSE ) continue;
+
     //static call to set current primary vertex
     StMuDst::setVertexIndex(ivtx);
 
@@ -272,7 +309,7 @@ Int_t StUPCFilterMaker::Make()
       Bool_t matchTof = tofPid.matchFlag() != 0 ? kTRUE : kFALSE;
 
       //require at least one match, only in data or embedding MC
-      if( mIsMC!=1 && !matchBemc && !matchTof ) continue;
+      //if( mIsMC!=1 && !matchBemc && !matchTof ) continue;
 
       //track matched to BEMC or TOF and selected to write to output UPC event
       nSelTracks++;
@@ -311,7 +348,7 @@ Int_t StUPCFilterMaker::Make()
 
     }//tracks loop
 
-    if( nSelTracks <= 0 ) continue; //no selected tracks for this vertex
+    //if( nSelTracks <= 0 ) continue; //no selected tracks for this vertex
 
     //position of current primary vertex
     StThreeVectorF vtxPos = evt->primaryVertexPosition();
