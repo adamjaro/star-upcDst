@@ -25,12 +25,12 @@
 
 <pre><code> ./build-maker.sh </pre></code>
 
-- Next few steps are setting a directory for your input test filelist (below the example is called "test.list", modify the run script for your need, then run it:
+- Next few steps are setting a directory for your input test filelist (below the example is called "test.list"), modify the run script for your need, and then run it:
 
 <pre><code> mkdir txt </pre></code>
 <pre><code> cp [your_filelist] ./txt/test.list </pre></code>
 
-- Modify script "RunFilterMaker.C", there are two major changes for your own interest. 1, Modify the input and output name at the beginning, here the example uses "./txt/test.list" and "test.root", respectively 2, Add/modify trigger IDs around line 51, where the 2nd and 3rd arguments can be left blank for all run numbers. 3, Specify 0,1,2 for "data","starsim MC", or "embedding MC", respectively.
+- Modify script "RunFilterMaker.C", there are a few major changes for your own interest. 1, Modify the input and output name at the beginning, here the example uses "./txt/test.list" and "test.root", respectively. 2, Add/modify trigger IDs around line 51, where the 2nd and 3rd arguments can be left blank for all run numbers. 3, Specify 0,1,2 for "data","starsim MC", or "embedding MC", respectively.
 
 <pre><code> anaMaker->addTriggerId(trigger id, runnumber_start, runnumber_end); </pre></code> 
 
@@ -94,7 +94,7 @@ It produces an output, "output.root".
 
 Now it is time for analysis!
 
-## Step 3: 
+## Step 3 (optional): 
 
 There are two different ways to setup your condor jobs. Let's see two examples of submitting jobs for running *Step 1*. Remember, one has to make sure the run script has been setup correctly in *Step 1* if one uses this to produce picoDst files. 
 
