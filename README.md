@@ -1,6 +1,6 @@
 # star-upcDst
 
-![](https://www.google.com/search?q=ultra-peripheral+collisions+in+heavy+ions&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjBsKz0i6DfAhVOmuAKHWrNDiQQ_AUIDigB&biw=1440&bih=790#imgdii=UXDfWkOA3dkRcM:&imgrc=eW927s9b7OctPM:)
+![Bilby Stampede](https://cds.cern.ch/record/2288105/files/fig1.png)
 
 ## Overview:
 
