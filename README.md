@@ -143,7 +143,8 @@ Finally, to clean up after all outputs are produced correctly, type:
 
 
 ## Contact:
-Adam, Jaroslav <JaroslavAdam@creighton.edu>
+Adam, Jaroslav: <JaroslavAdam@creighton.edu>
+
 
 
 
