@@ -57,17 +57,38 @@ Under the main directory (under star-upcDst), create a new directory,
 <pre><code> cmake ../ </code></pre>
 <pre><code> make </code></pre>
 
-Done. To use an example to help you, go to folder "examples" and try:
+Done. To try an example, go to folder "examples":
 
 <pre><code> cd ../examples </code></pre>
 
-change the input file to what one just created, "test.root", for macro "make_pT.C". Then do, 
+and remember to change the input file name to what has been just created, "test.root", for macro "make_pT.C". Then do, 
 
 <pre><code> root -l run_make_pT.C </code></pre>
 
 
+- For another example, it uses a C++ code (with ROOT libraries) to read the picoDst file and save output into a small ROOT tree or anything one wants to save. Instead of running it as a .C ROOT macro, this example build an executable and can run as a standard C++ code without using ROOT.
+
+Again, under the main directory, 
+
+<pre><code> cd ./examples/dstreader </code></pre>
+
+make another directory for build,
+
+<pre><code> mkdir build </code></pre>
+
+before one compiles the code, the input file needs to be modified accordingly in "./examples/dstreader/src/AnalysisTemplate.cxx". Again, change it to the "test.root" that has just been created, then go back to directory for build,
 
 
+<pre><code> cd build </code></pre>
+<pre><code> cmake ../ </code></pre>
+<pre><code> make </code></pre>
 
+The executable will show up as "AnalysisTemplate", now run it:
+
+<pre><code> ./AnalysisTemplate </code></pre>
+
+It produces an output, "output.root". 
+
+Now it is time for analysis!
 
 
