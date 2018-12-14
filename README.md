@@ -27,7 +27,7 @@ star-upcDst, is a new framework mainly developed by Jarda Adam, to simplify anal
 <pre><code> mkdir txt </pre></code>
 <pre><code> cp [your_filelist] ./txt/test.list </pre></code>
 
-- Modify script "RunFilterMaker.C", there are two major changes for your own interest. 1. Modify the input and output name at the beginning, here the example uses "./txt/test.list" and "test.root", respectively 2. Add/modify trigger IDs around line 51, where the 2nd and 3rd arguments can be left blank for all run numbers. 
+- Modify script "RunFilterMaker.C", there are two major changes for your own interest. 1, Modify the input and output name at the beginning, here the example uses "./txt/test.list" and "test.root", respectively 2, Add/modify trigger IDs around line 51, where the 2nd and 3rd arguments can be left blank for all run numbers. 3, Specify 0,1,2 for "data","starsim MC", or "embedding MC", respectively.
 
 <pre><code> anaMaker->addTriggerId(trigger id, runnumber_start, runnumber_end); </pre></code> 
 
@@ -35,11 +35,38 @@ or
 
 <pre><code> anaMaker->addTriggerId(trigger id); </pre></code>
 
+and 
+
+<pre><code> anaMaker->setIsMC(0); </pre></code>
+
 - Run it to produce the picoDst file
 
 <pre><code> root4star -l RunFilterMaker.C </pre></code>
 
 - The output should be "test.root".  
+
+
+## Step 2:
+
+- With "test.root", the picoDst file, as the input, one can perform simple analysis or run over all events to save information into a tree or histograms. To do that, one needs to compile the package and setup the link to the library. This can be simply done in a few steps:
+
+Under the main directory (under star-upcDst), create a new directory,
+
+<pre><code> mkdir build </pre></code>
+<pre><code> cd build </code></pre>
+<pre><code> cmake ../ </code></pre>
+<pre><code> make </code></pre>
+
+Done. To use an example to help you, go to folder "examples" and try:
+
+<pre><code> cd ../examples </code></pre>
+
+change the input file to what one just created, "test.root", for macro "make_pT.C". Then do, 
+
+<pre><code> root -l run_make_pT.C </code></pre>
+
+
+
 
 
 
