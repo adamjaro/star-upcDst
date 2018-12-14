@@ -96,12 +96,12 @@ Now it is time for analysis!
 
 ## Step 3: 
 
-There are two different ways to setup your condor jobs. Let's see two examples of submitting jobs for running *Step 1*
+There are two different ways to setup your condor jobs. Let's see two examples of submitting jobs for running *Step 1*. Remember, one has to make sure the run script has been setup correctly in *Step 1* if one uses this to produce picoDst files. 
 
 ### Example 1:
 - MuDst files are on distributed disks and STAR catalog can find your dataset, then one can use Jarda's example as a template. Jarda's example is based on AuAu Run14 UPC events:
 
-Go to "scheduler" and only modify "SubmitQueryList.sh":
+Go to directory "scheduler" and only modify "SubmitQueryList.sh":
 1. Modify the "top" directory to where output goes, for example, one can just do, 
 
 <pre><code> mkdir output </code></pre>
@@ -123,9 +123,9 @@ Finally, to clean up after all outputs are produced correctly, type:
 
 
 ### Example 2:
-- MuDst files are transfered by someone privately, use filelist to submit condor jobs, the one can use Kong's example as a template. Kong's example is based on dAu Run16 UPC events:
+- MuDst files are transfered by someone privately, so it can use a filelist as input to submit condor jobs, then one can use Kong's example as a template. Kong's example is based on dAu Run16 UPC events:
 
-Go to "scheduler_filelist" and only modify "SubmitQueryList.sh" with similar steps as *Example 1*:
+Go to directory "scheduler_filelist" and only modify "SubmitQueryList.sh" with similar steps as *Example 1*:
 1. Modify "jobname" to whatever you want;
 2. Modify the path to your filelist;
 
