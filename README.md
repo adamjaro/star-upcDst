@@ -142,6 +142,8 @@ Finally, to clean up after all outputs are produced correctly, type:
 <pre><code> ./clean.sh </pre></code>
 
 
+## Contact:
+Adam, Jaroslav <JaroslavAdam@creighton.edu>
 
 
 
