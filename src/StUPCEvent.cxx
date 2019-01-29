@@ -49,6 +49,11 @@ StUPCEvent::StUPCEvent():
     mZdcEastADC[ipmt] = 0;
     mZdcWestADC[ipmt] = 0;
   }
+  for(Int_t i=0; i<mNZdcSmd; i++) {
+    mZdcSmdEast[i] = 0;
+    mZdcSmdWest[i] = 0;
+  }
+
 
   if(!mgUPCTracks) {
     mgUPCTracks = new TClonesArray("StUPCTrack");
@@ -143,6 +148,30 @@ void StUPCEvent::setZDCWestADC(UShort_t signal, Int_t pmt) {
   mZdcWestADC[idx] = signal;
 
 }//setZDCWestADC
+
+//_____________________________________________________________________________
+void StUPCEvent::setZdcSMDEast(Int_t verthori, Int_t strip, UShort_t smd) {
+
+  //ZDC SMD data, indexing for verthori is 0=vertical, 1=Horizontal and strips go as strip=1, strip<9
+
+  if( verthori < 0 or verthori > 1 ) return;
+  if( strip < 1 or strip > 8 ) return;
+
+  mZdcSmdEast[strip-1 + verthori*8] = smd;
+
+}//setZdcSMDEast
+
+//_____________________________________________________________________________
+void StUPCEvent::setZdcSMDWest(Int_t verthori, Int_t strip, UShort_t smd) {
+
+  //ZDC SMD data, indexing for verthori is 0=vertical, 1=Horizontal and strips go as strip=1, strip<9
+
+  if( verthori < 0 or verthori > 1 ) return;
+  if( strip < 1 or strip > 8 ) return;
+
+  mZdcSmdWest[strip-1 + verthori*8] = smd;
+
+}//setZdcSMDWest
 
 //_____________________________________________________________________________
 StUPCTrack *StUPCEvent::addTrack()

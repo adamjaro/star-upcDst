@@ -55,6 +55,16 @@ void StUPCFilterTrgUtil::runZDC(const StTriggerData *trgdat, StUPCEvent *upcEvt)
   upcEvt->setZDCTimeDiff( trgdat->zdcTimeDifference() );
   upcEvt->setZdcVertexZ( trgdat->zdcVertexZ() );
 
+  //ZDC SMD
+  //vertical - horizontal loop
+  for(Int_t verthori=0; verthori<2; verthori++) {
+    //strip loop
+    for(Int_t strip=1; strip<9; strip++) {
+      upcEvt->setZdcSMDEast(verthori, strip, trgdat->zdcSMD(east, verthori, strip));
+      upcEvt->setZdcSMDWest(verthori, strip, trgdat->zdcSMD(west, verthori, strip));
+    }//strip loop
+  }//vertical - horizontal loop
+
 }//runZDC
 
 //_____________________________________________________________________________

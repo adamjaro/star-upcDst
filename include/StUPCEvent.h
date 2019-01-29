@@ -51,6 +51,9 @@ public:
   void setZDCTimeDiff(UShort_t deltaT) { mZdcTimeDiff = deltaT; }
   void setZdcVertexZ(Float_t vtx) { mZdcVertexZ = vtx; }
 
+  void setZdcSMDEast(Int_t verthori, Int_t strip, UShort_t smd);
+  void setZdcSMDWest(Int_t verthori, Int_t strip, UShort_t smd);
+
   void setBBCSmallEast(UInt_t sum) { mBBCSmallEast = sum; }
   void setBBCSmallWest(UInt_t sum) { mBBCSmallWest = sum; }
   void setBBCLargeEast(UInt_t sum) { mBBCLargeEast = sum; }
@@ -102,6 +105,9 @@ public:
   UShort_t getZDCWestTDC() const { return mZdcWestTDC; }
   UShort_t getZDCTimeDiff() const { return mZdcTimeDiff; }
   Float_t getZdcVertexZ() const { return mZdcVertexZ/10.; } // convert from mm to cm
+
+  UShort_t getZdcSMDEast(Int_t verthori, Int_t strip) const { return mZdcSmdEast[strip-1 + verthori*8]; }
+  UShort_t getZdcSMDWest(Int_t verthori, Int_t strip) const { return mZdcSmdWest[strip-1 + verthori*8]; }
 
   UInt_t getBBCSmallEast() const { return mBBCSmallEast; }
   UInt_t getBBCSmallWest() const { return mBBCSmallWest; }
@@ -168,6 +174,9 @@ private:
   UShort_t mZdcWestTDC; // ZDC TDC, west
   UShort_t mZdcTimeDiff; // ZDC time difference, east-west
   Float_t mZdcVertexZ; // ZDC vertex z position, mm
+  static const Int_t mNZdcSmd = 16; // number of ZDC SMD channels, east and west
+  UShort_t mZdcSmdEast[mNZdcSmd]; // ZDC SMD data east
+  UShort_t mZdcSmdWest[mNZdcSmd]; // ZDC SMD data west
 
   UInt_t mBBCSmallEast; // BBC truncated sum, small tiles, east
   UInt_t mBBCSmallWest; // BBC truncated sum, small tiles, west
@@ -202,7 +211,7 @@ private:
   TClonesArray *mMCParticles; // array of MC particles
   Int_t mNmc; //! number of mc particles in event, local use when filling
 
-  ClassDef(StUPCEvent, 2);
+  ClassDef(StUPCEvent, 3);
 };
 
 #endif
