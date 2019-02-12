@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE job>
+
+<job maxFilesPerProcess="30" fileListSyntax="xrootd" simulateSubmission="false">
+
+  <command>
+    echo "Starting the job"
+    ls
+    hostname
+    starpro
+    echo $STAR
+    echo $OPTSTAR
+    cons
+    root4star -l -q -b __MACRO__\(\"$FILELIST\",$INPUTFILECOUNT,\"$SCRATCH/$JOBID.root\",\"__CONFIG__\"\)
+  </command>
+
+  __INPUT__
+
+  <output fromScratch="*.root" toURL="file:__BASEDIR__/" />
+
+  <stdout URL="file:__BASEDIR__/logs/$JOBID.out"/>
+  <stderr URL="file:__BASEDIR__/logs/$JOBID.err"/>
+
+  <Generator>
+    <Location>__BASEDIR__/sched</Location>
+  </Generator>
+
+  <SandBox installer="ZIP">
+  	<Package>
+  		<File>file:__SRCDIR__/__MACRO__</File>
+  		<File>file:__SRCDIR__/TArgumentParser.h</File>
+  		<File>file:__CONFDIR__/__CONFIG__</File>
+  		<File>file:__SRCDIR__/StRoot</File>
+  	</Package>
+  </SandBox>
+
+
+
+
+
+
+
+
+
+
+
+
+</job>

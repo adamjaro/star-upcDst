@@ -3,12 +3,12 @@
 from glob import glob
 from subprocess import Popen, PIPE
 import sys
+import os
+
+from argument_parser import argument_parser
 
 #_____________________________________________________________________________
 if __name__ == "__main__":
-
-    basedir="/gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_main_JpsiB_10_11_14_v2/*"
-
 
     #command line argumets
     resubmit = False
@@ -16,6 +16,15 @@ if __name__ == "__main__":
     while args != []:
         arg = args.pop(0)
         if arg == "-r": resubmit = True
+        elif arg == "-c": config = args.pop(0)
+
+    #get outputs directory from config used for production
+    parser = argument_parser()
+    parser.add_parameter("top")
+    parser.parse(config)
+    basedir = parser.get("top") + "/*"
+
+    print basedir
 
     #submitted jobs
     joblist = []
@@ -26,16 +35,15 @@ if __name__ == "__main__":
 
     #running jobs
     running = []
-    cmd = "condor_q -submitter jaroslav -format \"%s\\n\" CMD"
+    cmd = "condor_q "+os.getlogin()
     out = Popen(cmd.split(), stdout=PIPE).communicate()[0].split("\n")
-    for job in out:
-        i1 = job.find("sched/sched")+len("sched/sched")
-        i2 = job.find(".csh")
+    for i in out:
+        i1 = i.find("sched/sched")+len("sched/sched")
+        i2 = i.find(".csh")
         if i2 < 0: continue
-        jobid = job[i1:i2]
+        jobid = i[i1:i2]
         #select jobs belonging to this production
-        if jobid not in joblist:
-            continue
+        if jobid not in joblist: continue
         running.append(jobid)
 
     print "Running:", len(running)

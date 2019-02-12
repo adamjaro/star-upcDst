@@ -1,0 +1,44 @@
+
+#upcDst production configuration
+
+#main directory for production outputs
+top /gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_JpsiB_14_v0
+
+#add inputs, could be catalog query or filelist (full path for filelist and should end with .list)
+#add_input   r10       production=P10ik,trgsetupname=AuAu200_production,filetype=daq_reco_MuDst,filename~st_upc,storage=local
+#add_input   r11       production=P11id,trgsetupname=AuAu200_production_2011,filetype=daq_reco_MuDst,filename~st_upc,storage=local
+add_input   r14_prod  production=P16id,trgsetupname=AuAu_200_production_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local
+add_input   r14_low   production=P16id,trgsetupname=AuAu_200_production_low_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local
+add_input   r14_mid   production=P16id,trgsetupname=AuAu_200_production_mid_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local
+add_input   r14_high  production=P16id,trgsetupname=AuAu_200_production_high_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local
+#add_input   r16_dAu   /gpfs01/star/pwg/ztu/star-upcDst/txt/dAu200_MuDst_file_4.list   # filelist by Kong
+
+#data/MC
+is_mc  0  # 0 - data,  1 - starsim MC,  2 - embedding MC
+
+#set trigger IDs and run range for each ID
+add_trigger   450705  15084051  15167014    # UPCJpsiB, Run14 AuAu, 1st id
+add_trigger   450725  15153036  15167007    # UPCJpsiB, Run14 AuAu, 2nd id
+
+#BEMC clustering
+bemc_cluster_param        0  #  use BEMC cluster conditions below if set to '1'
+bemc_size_max             4
+bemc_energy_seed          0.4
+bemc_energy_add           0.001
+bemc_energy_threshold_all 0.4
+
+#directory for merged outputs, relative to top
+outdir   merge_r14
+
+#name for merged outputs
+outfile  StUPC_JpsiB_14.root
+
+#list of output files
+outlist  StUPC_JpsiB_14.list
+
+
+
+
+
+
+

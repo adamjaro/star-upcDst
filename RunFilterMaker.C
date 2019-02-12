@@ -1,8 +1,15 @@
 
+#include "TArgumentParser.h"
+
+class StUPCFilterMaker;
+StUPCFilterMaker *anaMaker;
+void AddTrigger(UInt_t id, Int_t rmin, Int_t rmax);
+
 //_____________________________________________________________________________
 void RunFilterMaker(string filelist="txt/sim_slight14e1x1.list",
                     Int_t nFiles=999999,
-                    string outfile="/gpfs01/star/pwg/jaroslav/star-upcDst-data/test_productions/mc/StUPC_slight14e1x1_v2.root") {
+                    string outfile="/gpfs01/star/pwg/jaroslav/star-upcDst-data/test_productions/mc/StUPC_slight14e1x1_v2.root",
+                    string config="") {
 
   //load libraries to work with muDst
   gROOT->Macro("loadMuDst.C");
@@ -39,35 +46,43 @@ void RunFilterMaker(string filelist="txt/sim_slight14e1x1.list",
   StEpcMaker *epc = new StEpcMaker();
   epc->setPrint(kFALSE);
   //analysis maker
-  StUPCFilterMaker *anaMaker = new StUPCFilterMaker(maker, outfile); //maker for muDst passed to the constructor
+  anaMaker = new StUPCFilterMaker(maker, outfile); //maker for muDst passed to the constructor
 
   //----------------------------------------------------------------------
-  //Configure the analysis maker
-  //
+  // analysis maker configuration, do not change default values here,
+  // they are supposed to be loaded from configuration file
+
   //data/MC
-  anaMaker->setIsMC(0); // 0 - data,  1 - starsim MC,  2 - embedding MC
-  //
-  //set trigger IDs
-  anaMaker->addTriggerId(450705, 15084051, 15167014); // UPCJpsiB, Run14 AuAu, 1st id
-  anaMaker->addTriggerId(450725, 15153036, 15167007); // UPCJpsiB, Run14 AuAu, 2nd id
-  anaMaker->addTriggerId(450701, 15078073, 15167014); // UPC-main, Run14 AuAu, 1st id
-  anaMaker->addTriggerId(450711, 15153036, 15167007); // UPC-main, Run14 AuAu, 2nd id
-  anaMaker->addTriggerId(260750, 11039042, 11077018); // UPC_main, run 10 AuAu, 1st id
-  anaMaker->addTriggerId(270601, 11089036, 11098056); // upc_main, run 10 AuAu, 2nd id
-  anaMaker->addTriggerId(260750, 12122025, 12122025); // UPC_main, run 11 AuAu, 1st id
-  anaMaker->addTriggerId(350007, 12146003, 12152016); // UPC_main, run 11 AuAu, 2nd id
-  anaMaker->addTriggerId(350017, 12153002, 12179051); // UPC_main, run 11 AuAu, 3rd id
-  //
+  Int_t isMC = 0; // 0 - data,  1 - starsim MC,  2 - embedding MC
+
   // use BEMC cluster conditions below if set to true
   Bool_t useClusterParam = kFALSE;
   Int_t sizeMax = 4;
   Float_t energySeed = 0.4;
   Float_t energyAdd = 0.001;
   Float_t energyThresholdAll = 0.4;
+
+  //load values from config file
+  TArgumentParser parser;
+  parser.AddInt("is_mc", &isMC);
+  parser.AddBool("bemc_cluster_param", &useClusterParam);
+  parser.AddInt("bemc_size_max", &sizeMax);
+  parser.AddFloat("bemc_energy_seed", &energySeed);
+  parser.AddFloat("bemc_energy_add", &energyAdd);
+  parser.AddFloat("bemc_energy_threshold_all", &energyThresholdAll);
+  parser.AddFuncInt3("add_trigger", AddTrigger);
+
+  cout << "RunFilterMaker, using config from: " << config << endl;
+  parser.Parse(config);
+
   //----------------------------------------------------------------------
 
   //no debug printouts
   StMuDebug::setLevel(0);
+
+  //apply data/mc selection
+  cout << "RunFilterMaker: isMC: " << isMC << endl;
+  anaMaker->setIsMC(isMC);
 
   Int_t nevt = maker->chain()->GetEntries();
   //nevt=1;
@@ -105,4 +120,19 @@ void RunFilterMaker(string filelist="txt/sim_slight14e1x1.list",
 
 
 }//RunFilterMaker
+
+//_____________________________________________________________________________
+void AddTrigger(UInt_t id, Int_t rmin, Int_t rmax) {
+
+  //wrapper function to call maker::addTriggerId
+
+  anaMaker->addTriggerId(id, rmin, rmax);
+
+}//AddTrigger
+
+
+
+
+
+
 
