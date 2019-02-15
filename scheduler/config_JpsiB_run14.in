@@ -31,10 +31,10 @@ bemc_energy_threshold_all 0.1
 outdir   merge_r14
 
 #name for merged outputs
-outfile  StUPC_JpsiB_14.root
+outfile  StUPC_JpsiB_14_v1.root
 
 #list of output files
-outlist  StUPC_JpsiB_14.list
+outlist  StUPC_JpsiB_14_v1.list
 
 
 
