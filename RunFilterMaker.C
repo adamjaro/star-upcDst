@@ -6,10 +6,7 @@ StUPCFilterMaker *anaMaker;
 void AddTrigger(UInt_t id, Int_t rmin, Int_t rmax);
 
 //_____________________________________________________________________________
-void RunFilterMaker(string filelist="txt/sim_slight14e1x1.list",
-                    Int_t nFiles=999999,
-                    string outfile="/gpfs01/star/pwg/jaroslav/star-upcDst-data/test_productions/mc/StUPC_slight14e1x1_v2.root",
-                    string config="") {
+void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config) {
 
   //load libraries to work with muDst
   gROOT->Macro("loadMuDst.C");
@@ -80,12 +77,16 @@ void RunFilterMaker(string filelist="txt/sim_slight14e1x1.list",
   //no debug printouts
   StMuDebug::setLevel(0);
 
+  //show input and output for the maker
+  cout << "RunFilterMaker, filelist: " << filelist << endl;
+  cout << "RunFilterMaker, nFiles:   " << nFiles << endl;
+  cout << "RunFilterMaker, outfile:  " << outfile << endl;
+
   //apply data/mc selection
-  cout << "RunFilterMaker: isMC: " << isMC << endl;
+  cout << "RunFilterMaker, isMC: " << isMC << endl;
   anaMaker->setIsMC(isMC);
 
   Int_t nevt = maker->chain()->GetEntries();
-  //nevt=1;
   cout << "Number of events: " << nevt << endl;
 
   //initialize the makers

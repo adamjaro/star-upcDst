@@ -83,9 +83,11 @@ private:
     istringstream st(StringFromIter(tok_iter).Data());
     UInt_t arg0;
     st >> arg0;
-    Int_t arg12[2];
+    Int_t arg12[2] = {0, 0}; // default run range
     for(Int_t i=0; i<2; i++) {
-      istringstream st(StringFromIter(tok_iter).Data());
+      string inp = StringFromIter(tok_iter).Data();
+      if( inp.empty() == true || inp.find("#") == 0 ) break;
+      istringstream st(inp);
       st >> arg12[i];
     }
 
@@ -129,7 +131,10 @@ private:
 
     //retrieve string from token iterator
 
-    return (dynamic_cast<TObjString*>(tok_iter->Next()))->GetString();
+    TObject *obj = tok_iter->Next();
+    if( !obj ) return TString("");
+
+    return (dynamic_cast<TObjString*>(obj))->GetString();
 
   }//StringFromIter
 

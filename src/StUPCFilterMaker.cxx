@@ -172,7 +172,8 @@ Int_t StUPCFilterMaker::Make()
   Bool_t isTrg = kFALSE; //determine whether at least one of trigger IDs was fired
   for(UInt_t i=0; i<mTrgIDs.size(); i++) {
     // run range for a given trigger ID
-    if( runnum < mTrgRanLo[i] || runnum > mTrgRanHi[i] ) continue;
+    if( mTrgRanLo[i] != 0 && runnum < mTrgRanLo[i] ) continue;
+    if( mTrgRanHi[i] != 0 && runnum > mTrgRanHi[i] ) continue;
     //test trigger ID at 'i'
     if( !trgId.isTrigger( mTrgIDs[i] ) ) continue;
 

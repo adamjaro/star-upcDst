@@ -32,11 +32,14 @@ if __name__ == "__main__":
     parser.add_parameter("scheduler")
     parser.add_parameter("submit")
     parser.add_parameter("add_input", list)
+    parser.add_parameter("nfiles", int) # number of files for local running
+    parser.add_parameter("outfile") # output file for local running
 
     #default values for some parameters
     parser.set_default("macro", "RunFilterMaker.C") #macro to run the maker
     parser.set_default("scheduler", "scheduler_template.xml") #name of scheduler template macro
     parser.set_default("submit", "star-submit") #command to submit
+    parser.set_default("nfiles", 999999)
 
     parser.parse(config)
 
@@ -72,8 +75,27 @@ if __name__ == "__main__":
 
         #create jobs output folders
         basedir = top + "/" + q[0]
-        Popen("mkdir -p "+basedir+"/logs", shell=True).communicate()
-        Popen("mkdir -p "+basedir+"/sched", shell=True).communicate()
+        Popen("mkdir -p "+basedir, shell=True).communicate()
+
+        if submit == "local":
+            #local running, intended for testing purposes
+            print "Local running"
+            nfiles = parser.get("nfiles")
+            outfile = basedir + "/" + parser.get("outfile")
+            conf_full = confdir + "/" + config
+            log = confdir + "/run_job"+str(i)+".log"
+            os.system("rm -f "+log)
+            os.chdir(srcdir) # macro is assumed to be one level up
+            run_cmd = "nohup unbuffer "
+            run_cmd += "root4star -l -b -q '"+macro+"('\\\""+q[1]+"\\\""+"','"+str(nfiles)+"','\\\""+outfile+"\\\""
+            run_cmd += "','\\\""+conf_full+"\\\"')' |& cat > "+log+" &"
+            os.system(run_cmd) # run the macro
+            os.chdir(confdir) # move back
+            continue
+
+        #proceed with scheduler submit
+        Popen("mkdir "+basedir+"/logs", shell=True).communicate()
+        Popen("mkdir "+basedir+"/sched", shell=True).communicate()
 
         #create xml for each query in the list
         xmlname = "submit_"+str(i)+".xml"
@@ -97,7 +119,6 @@ if __name__ == "__main__":
         Popen(submit+" "+xmlname, shell=True).communicate()
 
         i += 1
-        #time.sleep(1)
 
     print "All done."
 
