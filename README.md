@@ -99,7 +99,7 @@ Now it is time for analysis!
 
 ## Step 3 (optional): 
 
-There are two different ways to setup your condor jobs. Let's see two examples of submitting jobs for running *Step 1*. Remember, one has to make sure the run script has been setup correctly in *Step 1* if one uses this to produce picoDst files. 
+There are two different ways to setup your condor jobs. Let's see two examples of submitting jobs for running *Step 1*. Remember, one has to make sure the run script has been setup correctly in *Step 1* if one uses this to produce upcDst files. 
 
 ### Example 1:
 - MuDst files are on distributed disks and STAR catalog can find your dataset, then one can use Jarda's example as a template. Jarda's example is based on AuAu Run14 UPC events:
