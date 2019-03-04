@@ -113,7 +113,13 @@ Finally submit it,
 
 One can check the job status (you can just do condor_q or) using "PrintStat.py":
 
-<pre><code> PrintStat.py config_JpsiB_run14.in </pre></code>
+<pre><code> PrintStat.py -c config_JpsiB_run14.in </pre></code>
+
+Or one can check the job status and also resubmit failed jobs:
+
+<pre><code> PrintStat.py -r -c config_JpsiB_run14.in </pre></code>
+
+PS: -r has to be first then -c.
 
 Finally, to clean up after all outputs are produced correctly, type:
 
