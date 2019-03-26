@@ -331,6 +331,7 @@ Int_t StUPCFilterMaker::Make()
       upcTrack->setNSigmasTPC( StUPCTrack::kKaon, track->nSigmaKaon() );
       upcTrack->setNSigmasTPC( StUPCTrack::kProton, track->nSigmaProton() );
       upcTrack->setVertexId( ivtx );
+      upcTrack->setFlag( StUPCTrack::kPrimary );
       if( emcProj ) {
         upcTrack->setFlag( StUPCTrack::kBemcProj );
         upcTrack->setBemcPtEtaPhi(emcPt, emcEta, emcPhi);

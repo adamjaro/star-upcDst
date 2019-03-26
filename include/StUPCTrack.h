@@ -24,7 +24,7 @@ public:
 
   //public types
   //flags for mFlags, up to 8 (uchar)
-  enum Flag{kBemc=0, kTof, kBemcProj};
+  enum Flag{kBemc=0, kTof, kBemcProj, kPrimary};
   //particles for dE/dx, 4 particle species
   enum Part{kElectron=0, kPion, kKaon, kProton};
 
