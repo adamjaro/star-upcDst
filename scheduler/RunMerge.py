@@ -30,9 +30,11 @@ if __name__ == "__main__":
     qlist = parser.get("add_input")
 
     #build pattern from query list
-    pattern = "/{"
+    pattern = ""
     for q in qlist: pattern += q[0]+","
-    pattern = pattern[:-1] + "}/*.root"
+    pattern = pattern[:-1]
+    if len(qlist) > 1: pattern = "{"+pattern+"}"
+    pattern = "/"+pattern+"/*.root"
 
     outdir = parser.get("outdir")
     outfile = parser.get("outfile")
@@ -62,6 +64,10 @@ if __name__ == "__main__":
     tmp = open(tmpnam, "w")
     cmd = "ls -s " + top + pattern
     out = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE).communicate()[0].split("\n")
+
+    #remove empty elements (last was empty string)
+    out = [i for i in out if i]
+
     print "Number of all outputs:", len(out)
     print
     #list loop
@@ -87,6 +93,8 @@ if __name__ == "__main__":
             merg = Popen(merge_cmd.split(), stdout=PIPE, stderr=PIPE).communicate()
             print merg[0], merg[1]
             chunk_list.write(chunkout+"\n")
+            #show the merged file
+            os.system("ls -alh "+chunkout)
             #reset the temporary and indices
             tmp = open(tmpnam, "w")
             totsiz = 0
