@@ -199,6 +199,7 @@ int main(void) {
     if( !hasValidVertex ) continue;
     if( iev%10000 == 0 ) cout << "Number of events = " << iev << endl;
 
+    cout << "upcEvt->getNumberOfVertices() " << upcEvt->getNumberOfVertices() << endl;
     myEvent.mNvertex_mini = upcEvt->getNumberOfVertices();
     myEvent.mZdcEastUA_mini = upcEvt->getZDCUnAttEast(); 
     myEvent.mZdcWestUA_mini = upcEvt->getZDCUnAttWest(); 
