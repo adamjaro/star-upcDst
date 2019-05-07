@@ -107,7 +107,7 @@ int main(void) {
   myTree->Branch("mNumberOfTracks_mini", &myEvent.mNumberOfTracks_mini, "mNumberOfTracks_mini/I");
   myTree->Branch("isTrigger_mini", myEvent.isTrigger_mini, "isTrigger_mini[3]/B");
   
-  myTree->Branch("mNvertex_mini", myEvent.mNvertex_mini, "mNvertex_mini/I");
+  myTree->Branch("mNvertex_mini", &myEvent.mNvertex_mini, "mNvertex_mini/I");
   myTree->Branch("mPosX_mini", myEvent.mPosX_mini, "mPosX_mini[mNvertex_mini]/F");
   myTree->Branch("mPosY_mini", myEvent.mPosY_mini, "mPosY_mini[mNvertex_mini]/F");
   myTree->Branch("mPosZ_mini", myEvent.mPosZ_mini, "mPosZ_mini[mNvertex_mini]/F");
@@ -202,8 +202,6 @@ int main(void) {
 
     
     myEvent.mNvertex_mini = upcEvt->getNumberOfVertices();
-
-    cout << "upcEvt->getNumberOfVertices() " << myEvent.mNvertex_mini << endl;
     myEvent.mZdcEastUA_mini = upcEvt->getZDCUnAttEast(); 
     myEvent.mZdcWestUA_mini = upcEvt->getZDCUnAttWest(); 
     for(int i=0;i<3;i++){
