@@ -26,11 +26,12 @@ public:
   Bool_t isTrigger_mini[3];
 
   //vertex info
-  Float_t mPosX_mini[10]; // position x
-  Float_t mPosY_mini[10]; // position y
-  Float_t mPosZ_mini[10]; // position z
-  Int_t mNPrimaryTracks_mini[10];
   Int_t mNvertex_mini;
+  Float_t mPosX_mini[30]; // position x
+  Float_t mPosY_mini[30]; // position y
+  Float_t mPosZ_mini[30]; // position z
+  Int_t mNPrimaryTracks_mini[30];
+  
 
   //ZDC and SMD
   UShort_t mZdcEastUA_mini; // ZDC unattenuated signal, east
@@ -106,11 +107,11 @@ int main(void) {
   myTree->Branch("mNumberOfTracks_mini", &myEvent.mNumberOfTracks_mini, "mNumberOfTracks_mini/I");
   myTree->Branch("isTrigger_mini", myEvent.isTrigger_mini, "isTrigger_mini[3]/B");
   
-  myTree->Branch("mPosX_mini", myEvent.mPosX_mini, "mPosX_mini[10]/F");
-  myTree->Branch("mPosY_mini", myEvent.mPosY_mini, "mPosY_mini[10]/F");
-  myTree->Branch("mPosZ_mini", myEvent.mPosZ_mini, "mPosZ_mini[10]/F");
-  myTree->Branch("mNPrimaryTracks_mini", myEvent.mNPrimaryTracks_mini, "mNPrimaryTracks_mini[10]/I");
   myTree->Branch("mNvertex_mini", myEvent.mNvertex_mini, "mNvertex_mini/I");
+  myTree->Branch("mPosX_mini", myEvent.mPosX_mini, "mPosX_mini[mNvertex_mini]/F");
+  myTree->Branch("mPosY_mini", myEvent.mPosY_mini, "mPosY_mini[mNvertex_mini]/F");
+  myTree->Branch("mPosZ_mini", myEvent.mPosZ_mini, "mPosZ_mini[mNvertex_mini]/F");
+  myTree->Branch("mNPrimaryTracks_mini", myEvent.mNPrimaryTracks_mini, "mNPrimaryTracks_mini[mNvertex_mini]/I");
 
   myTree->Branch("mZdcEastUA_mini", &myEvent.mZdcEastUA_mini, "mZdcEastUA_mini/S");
   myTree->Branch("mZdcWestUA_mini", &myEvent.mZdcWestUA_mini, "mZdcWestUA_mini/S");
@@ -155,7 +156,7 @@ int main(void) {
   //ask for number of events
   Long64_t nev = upcTree->GetEntries();
   cout << "Number of events: " << nev << endl;
-
+  nev=10000;
   //event loop
   for(Long64_t iev=0; iev<nev; iev++) {
 
@@ -199,8 +200,10 @@ int main(void) {
     if( !hasValidVertex ) continue;
     if( iev%10000 == 0 ) cout << "Number of events = " << iev << endl;
 
-    cout << "upcEvt->getNumberOfVertices() " << upcEvt->getNumberOfVertices() << endl;
+    
     myEvent.mNvertex_mini = upcEvt->getNumberOfVertices();
+
+    cout << "upcEvt->getNumberOfVertices() " << myEvent.mNvertex_mini << endl;
     myEvent.mZdcEastUA_mini = upcEvt->getZDCUnAttEast(); 
     myEvent.mZdcWestUA_mini = upcEvt->getZDCUnAttWest(); 
     for(int i=0;i<3;i++){
