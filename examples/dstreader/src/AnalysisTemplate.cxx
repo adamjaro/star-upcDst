@@ -156,7 +156,6 @@ int main(void) {
   //ask for number of events
   Long64_t nev = upcTree->GetEntries();
   cout << "Number of events: " << nev << endl;
-  nev=10000;
   //event loop
   for(Long64_t iev=0; iev<nev; iev++) {
 
@@ -200,7 +199,6 @@ int main(void) {
     if( !hasValidVertex ) continue;
     if( iev%10000 == 0 ) cout << "Number of events = " << iev << endl;
 
-    
     myEvent.mNvertex_mini = upcEvt->getNumberOfVertices();
     myEvent.mZdcEastUA_mini = upcEvt->getZDCUnAttEast(); 
     myEvent.mZdcWestUA_mini = upcEvt->getZDCUnAttWest(); 
