@@ -89,7 +89,7 @@ public:
 int main(void) {
 
   //open input file
-  TFile *infile = TFile::Open("/gpfs01/star/pwg/ztu/star-upcDst/output/r16_dAu_v0/all.root", "read");
+  TFile *infile = TFile::Open("/Users/kong/google_drive/BNL_folder/Work/STAR/STAR_UPCpicoMaker/star-upcDst/upcDst_files/upcDst_dAu200.root", "read");
 
   //get picoDst tree in file
   TTree *upcTree = dynamic_cast<TTree*>( infile->Get("mUPCTree") );
