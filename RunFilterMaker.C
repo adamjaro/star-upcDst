@@ -25,6 +25,8 @@ void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config
 
   //load the analysis maker compiled before with cons
   gSystem->Load("StUPCFilterMaker.so");
+  //TOF calib maker
+  gSystem->Load("StBTofCalibMaker.so");
 
   //create chain directory-like structure for maker
   //top level
@@ -42,6 +44,9 @@ void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config
   pre_ecl->setPrint(kFALSE);
   StEpcMaker *epc = new StEpcMaker();
   epc->setPrint(kFALSE);
+  //TOF calib
+  StBTofCalibMaker *tofCalib = new StBTofCalibMaker();
+  tofCalib->setMuDstIn(kTRUE);
   //analysis maker
   anaMaker = new StUPCFilterMaker(maker, outfile); //maker for muDst passed to the constructor
 
@@ -59,6 +64,9 @@ void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config
   Float_t energyAdd = 0.001;
   Float_t energyThresholdAll = 0.4;
 
+  //use TOF start time override to zero
+  Bool_t tof_start_zero = kFALSE;
+
   //load values from config file
   TArgumentParser parser;
   parser.AddInt("is_mc", &isMC);
@@ -67,6 +75,7 @@ void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config
   parser.AddFloat("bemc_energy_seed", &energySeed);
   parser.AddFloat("bemc_energy_add", &energyAdd);
   parser.AddFloat("bemc_energy_threshold_all", &energyThresholdAll);
+  parser.AddBool("tof_start_zero", &tof_start_zero);
   parser.AddFuncInt3("add_trigger", AddTrigger);
 
   cout << "RunFilterMaker, using config from: " << config << endl;
@@ -85,6 +94,12 @@ void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config
   //apply data/mc selection
   cout << "RunFilterMaker, isMC: " << isMC << endl;
   anaMaker->setIsMC(isMC);
+
+  //apply TOF start time override
+  cout << "RunFilterMaker, tof_start_zero: " << tof_start_zero << endl;
+  if( tof_start_zero == kTRUE ) {
+    tofCalib->forceTStartZero();
+  }
 
   Int_t nevt = maker->chain()->GetEntries();
   cout << "Number of events: " << nevt << endl;

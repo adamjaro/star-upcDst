@@ -86,7 +86,7 @@ if __name__ == "__main__":
             log = confdir + "/run_job"+str(i)+".log"
             os.system("rm -f "+log)
             os.chdir(srcdir) # macro is assumed to be one level up
-            run_cmd = "nohup unbuffer "
+            run_cmd = "nohup "
             run_cmd += "root4star -l -b -q '"+macro+"('\\\""+q[1]+"\\\""+"','"+str(nfiles)+"','\\\""+outfile+"\\\""
             run_cmd += "','\\\""+conf_full+"\\\"')' |& cat > "+log+" &"
             os.system(run_cmd) # run the macro

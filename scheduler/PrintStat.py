@@ -4,6 +4,7 @@ from glob import glob
 from subprocess import Popen, PIPE
 import sys
 import os
+from math import ceil
 
 from argument_parser import argument_parser
 
@@ -77,7 +78,9 @@ if __name__ == "__main__":
     print "Errors:", len(missing)
 
     print "Done:", len(donelist)
-    print "Output total size:", totsiz
+    print "Output total size:".ljust(20), totsiz, "K"
+    print "".ljust(20), ceil(float(totsiz)/1024), "M"
+    print "".ljust(20), ceil(float(totsiz)/1024**2), "G"
 
     #resubmit missing jobs if requested
     if resubmit is True and len(missing) > 0:

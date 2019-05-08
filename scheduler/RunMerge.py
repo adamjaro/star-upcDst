@@ -46,7 +46,7 @@ if __name__ == "__main__":
     print "  Output list:     ", outlist
 
     #size of one output chunk
-    chunksiz = int(2.5e6)  # approx kB
+    chunksiz = int(1.9e6)  # approx kB
 
     #create output directory for merged files
     merge_path = top+"/"+outdir
