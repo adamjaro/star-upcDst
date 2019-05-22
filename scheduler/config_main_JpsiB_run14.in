@@ -2,7 +2,7 @@
 #upcDst production configuration, run 14, UPC-main and UPCJpsiB
 
 #main directory for production outputs
-top /gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_main_JpsiB_14_v0
+top /gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/UPC_main_JpsiB_14_v1
 
 #add inputs, could be catalog query or filelist (full path for filelist and should end with .list)
 add_input   r14_prod  production=P16id,trgsetupname=AuAu_200_production_2014,filetype=daq_reco_MuDst,filename~st_upc,storage=local
@@ -23,7 +23,7 @@ add_trigger   450711  15153036  15167007    # UPC-main, Run14 AuAu, 2nd id
 tof_start_zero  1
 
 #BEMC clustering
-bemc_cluster_param        1  #  use BEMC cluster conditions below if set to '1'
+bemc_cluster_param        0  #  use BEMC cluster conditions below if set to '1'
 bemc_size_max             4
 bemc_energy_seed          0.3
 bemc_energy_add           0.001
@@ -33,10 +33,10 @@ bemc_energy_threshold_all 0.1
 outdir   merge_r14
 
 #name for merged outputs
-outfile  StUPC_main_JpsiB_14_v0.root
+outfile  StUPC_main_JpsiB_14_v1.root
 
 #list of output files
-outlist  StUPC_main_JpsiB_14_v0.list
+outlist  StUPC_main_JpsiB_14_v1.list
 
 
 
