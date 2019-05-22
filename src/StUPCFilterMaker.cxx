@@ -41,6 +41,7 @@
 
 #include "StUPCFilterTrgUtil.h"
 #include "StUPCFilterBemcUtil.h"
+#include "StUPCFilterRPUtil.h"
 #include "StUPCFilterMaker.h"
 
 ClassImp(StUPCFilterMaker);
@@ -49,7 +50,8 @@ ClassImp(StUPCFilterMaker);
 StUPCFilterMaker::StUPCFilterMaker(StMuDstMaker *maker, string outnam) : StMaker("StReadMuDstMaker"),
   mMaker(maker), mMuDst(0x0), mIsMC(0), mOutName(outnam), mOutFile(0x0),
   mHistList(0x0), mCounter(0x0), mErrCounter(0x0),
-  mUPCEvent(0x0), mUPCTree(0x0), mTrgUtil(0x0), mBemcUtil(0x0)
+  mUPCEvent(0x0), mUPCTree(0x0),  mTrgUtil(0x0), mBemcUtil(0x0),
+  mMakeRP(0), mRPUtil(0x0)
 {
   //constructor
 
@@ -66,6 +68,7 @@ StUPCFilterMaker::~StUPCFilterMaker()
 
   delete mTrgUtil; mTrgUtil=0;
   delete mBemcUtil; mBemcUtil=0;
+  delete mRPUtil; mRPUtil=0;
   delete mHistList; mHistList=0;
   delete mCounter; mCounter=0;
   delete mErrCounter; mErrCounter=0;
@@ -111,6 +114,12 @@ Int_t StUPCFilterMaker::Init() {
   //configure the UPC event
   if( mIsMC > 0 ) mUPCEvent->setIsMC( kTRUE );
 
+  //configure for Roman Pot event
+  if( mMakeRP ) {
+    mRPUtil = new StUPCFilterRPUtil();
+    mUPCEvent->makeRPEvent();
+  }
+
   //create the tree
   mUPCTree = new TTree("mUPCTree", "mUPCTree");
   //add branch with event objects
@@ -139,6 +148,7 @@ Int_t StUPCFilterMaker::Make()
 
   mUPCEvent->clearEvent(); //clear the output UPC event
   mBemcUtil->clear(); //clear data structures in BEMC util
+  if( mRPUtil ) mRPUtil->clear(); // clear data structures in RP util
 
   //input muDst data
   mMuDst = mMaker->muDst();
@@ -369,6 +379,9 @@ Int_t StUPCFilterMaker::Make()
     upcVtx->setId( ivtx );
 
   }//vertex loop
+
+  //Roman Pot data
+  if( mRPUtil ) mRPUtil->processEvent(mUPCEvent->getRPEvent(), mMuDst);
 
   //write BEMC clusters
   mBemcUtil->writeBEMC(mUPCEvent);

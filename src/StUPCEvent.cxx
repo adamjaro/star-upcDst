@@ -15,6 +15,7 @@
 #include "StUPCTrack.h"
 #include "StUPCBemcCluster.h"
 #include "StUPCVertex.h"
+#include "StRPEvent.h"
 
 #include "StUPCEvent.h"
 
@@ -24,6 +25,8 @@ TClonesArray *StUPCEvent::mgUPCTracks = 0;
 TClonesArray *StUPCEvent::mgUPCBemcClusters = 0;
 TClonesArray *StUPCEvent::mgUPCVertices = 0;
 TClonesArray *StUPCEvent::mgMCParticles = 0;
+
+StRPEvent *StUPCEvent::mgRPEvent = 0;
 
 //_____________________________________________________________________________
 StUPCEvent::StUPCEvent():
@@ -39,7 +42,8 @@ StUPCEvent::StUPCEvent():
   mUPCTracks(0x0), mNtracks(0),
   mUPCBemcClusters(0x0), mNclusters(0),
   mUPCVertices(0x0), mNvertices(0),
-  mMCParticles(0x0), mNmc(0)
+  mMCParticles(0x0), mNmc(0),
+  mRPEvent(0x0)
 {
   //default constructor
 
@@ -85,6 +89,8 @@ StUPCEvent::~StUPCEvent()
   if(mUPCVertices) {delete mUPCVertices; mUPCVertices = 0x0;}
   if(mMCParticles) {delete mMCParticles; mMCParticles = 0x0;}
 
+  if(mRPEvent) {delete mRPEvent; mRPEvent = 0x0;}
+
 }//~StUPCEvent
 
 //_____________________________________________________________________________
@@ -108,6 +114,10 @@ void StUPCEvent::clearEvent()
   if(mMCParticles) {
     mMCParticles->Clear("C");
     mNmc = 0;
+  }
+
+  if(mRPEvent) {
+    mRPEvent->clearEvent();
   }
 
 }//clearEvent
@@ -199,6 +209,18 @@ StUPCVertex *StUPCEvent::addVertex()
   return dynamic_cast<StUPCVertex*>( mUPCVertices->ConstructedAt(mNvertices++) );
 
 }//addVertex
+
+//_____________________________________________________________________________
+StRPEvent *StUPCEvent::makeRPEvent() {
+
+  if( mRPEvent ) return mRPEvent;
+
+  if( !mgRPEvent ) mgRPEvent = new StRPEvent();
+  mRPEvent = mgRPEvent;
+
+  return mRPEvent;
+
+}//makeRPEvent
 
 //_____________________________________________________________________________
 void StUPCEvent::setIsMC(Bool_t mc) {

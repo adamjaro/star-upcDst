@@ -67,6 +67,9 @@ void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config
   //use TOF start time override to zero
   Bool_t tof_start_zero = kFALSE;
 
+  //write Roman Pot data
+  Bool_t make_RP_event = kFALSE;
+
   //load values from config file
   TArgumentParser parser;
   parser.AddInt("is_mc", &isMC);
@@ -77,6 +80,7 @@ void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config
   parser.AddFloat("bemc_energy_threshold_all", &energyThresholdAll);
   parser.AddBool("tof_start_zero", &tof_start_zero);
   parser.AddFuncInt3("add_trigger", AddTrigger);
+  parser.AddBool("make_RP_event", &make_RP_event);
 
   cout << "RunFilterMaker, using config from: " << config << endl;
   parser.Parse(config);
@@ -100,6 +104,10 @@ void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config
   if( tof_start_zero == kTRUE ) {
     tofCalib->forceTStartZero();
   }
+
+  //Roman Pot data
+  cout << "RunFilterMaker, make_RP_event: " << make_RP_event << endl;
+  anaMaker->setMakeRPEvent(make_RP_event);
 
   Int_t nevt = maker->chain()->GetEntries();
   cout << "Number of events: " << nevt << endl;

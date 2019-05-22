@@ -12,6 +12,7 @@ class StEmcGeom;
 class StMuTrack;
 class StUPCFilterTrgUtil;
 class StUPCFilterBemcUtil;
+class StUPCFilterRPUtil;
 
 class StUPCFilterMaker: public StMaker {
 
@@ -21,6 +22,7 @@ public:
   ~StUPCFilterMaker();
 
   void setIsMC(Int_t mc) { mIsMC = mc; }
+  void setMakeRPEvent(Bool_t makerp) { mMakeRP = makerp; }
 
   void addTriggerId(UInt_t id, Int_t rmin=-1e8, Int_t rmax=1e8);
 
@@ -61,8 +63,10 @@ private:
   StUPCFilterTrgUtil *mTrgUtil;
   StUPCFilterBemcUtil *mBemcUtil; //utility class for BEMC matching
 
+  Bool_t mMakeRP; // flag to configure for RP event
+  StUPCFilterRPUtil *mRPUtil; //utility class for Roman Pots
 
-  ClassDef(StUPCFilterMaker, 1);
+  ClassDef(StUPCFilterMaker, 2);
 
 };
 
