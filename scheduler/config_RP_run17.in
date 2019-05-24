@@ -1,0 +1,42 @@
+
+# Roman Pots run 17, data by Tomas
+
+
+#common outputs
+top  /gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/RP_central_elastic_17_v0
+
+#list staged by Tomas
+add_input  list  /gpfs01/star/pwg/truhlar/muDst.list
+
+is_mc  0  # 0 - data,  1 - starsim MC,  2 - embedding MC
+
+#write RP data
+make_RP_event  1
+
+#central triggers
+add_trigger   590701	18176013	18178017 # RP_CPT2	rp
+add_trigger   590705	18176013	18178017 # RP_CPT2noBBCL	rp
+add_trigger   590708	18176013	18178017 # RP_CPTnoBBCL	rp
+
+#elastic triggers
+add_trigger   590703	18176013	18178017 # RP_SDT	rp
+add_trigger   590709	18176013	18178017 # RP_ET	rp
+
+#BEMC clustering
+bemc_cluster_param        1  #  use BEMC cluster conditions below if set to '1'
+bemc_size_max             4
+bemc_energy_seed          0.3
+bemc_energy_add           0.001
+bemc_energy_threshold_all 0.1
+
+#directory for merged outputs, relative to top
+outdir   merge_files
+
+#name for merged outputs
+outfile  StUPCRP_central_elastic_17_v0.root
+
+#list of output files
+outlist  StUPCRP_central_elastic_17_v0.list
+
+
+

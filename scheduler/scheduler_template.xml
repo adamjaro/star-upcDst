@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE job>
 
-<job maxFilesPerProcess="30" fileListSyntax="xrootd" simulateSubmission="false">
+<job maxFilesPerProcess="10" fileListSyntax="xrootd" simulateSubmission="false">
 
   <command>
     echo "Starting the job"
