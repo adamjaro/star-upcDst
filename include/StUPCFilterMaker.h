@@ -13,6 +13,7 @@ class StMuTrack;
 class StUPCFilterTrgUtil;
 class StUPCFilterBemcUtil;
 class StUPCFilterRPUtil;
+class StRPEvent;
 
 class StUPCFilterMaker: public StMaker {
 
@@ -64,9 +65,10 @@ private:
   StUPCFilterBemcUtil *mBemcUtil; //utility class for BEMC matching
 
   Bool_t mMakeRP; // flag to configure for RP event
-  StUPCFilterRPUtil *mRPUtil; //utility class for Roman Pots
+  StUPCFilterRPUtil *mRPUtil; // utility class for Roman Pots
+  StRPEvent *mRPEvent; // output RP event
 
-  ClassDef(StUPCFilterMaker, 2);
+  ClassDef(StUPCFilterMaker, 3);
 
 };
 

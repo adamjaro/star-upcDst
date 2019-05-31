@@ -39,6 +39,8 @@
 #include "StUPCBemcCluster.h"
 #include "StUPCVertex.h"
 
+#include "StRPEvent.h"
+
 #include "StUPCFilterTrgUtil.h"
 #include "StUPCFilterBemcUtil.h"
 #include "StUPCFilterRPUtil.h"
@@ -51,7 +53,7 @@ StUPCFilterMaker::StUPCFilterMaker(StMuDstMaker *maker, string outnam) : StMaker
   mMaker(maker), mMuDst(0x0), mIsMC(0), mOutName(outnam), mOutFile(0x0),
   mHistList(0x0), mCounter(0x0), mErrCounter(0x0),
   mUPCEvent(0x0), mUPCTree(0x0),  mTrgUtil(0x0), mBemcUtil(0x0),
-  mMakeRP(0), mRPUtil(0x0)
+  mMakeRP(0), mRPUtil(0x0), mRPEvent(0x0)
 {
   //constructor
 
@@ -69,6 +71,7 @@ StUPCFilterMaker::~StUPCFilterMaker()
   delete mTrgUtil; mTrgUtil=0;
   delete mBemcUtil; mBemcUtil=0;
   delete mRPUtil; mRPUtil=0;
+  delete mRPEvent; mRPEvent=0;
   delete mHistList; mHistList=0;
   delete mCounter; mCounter=0;
   delete mErrCounter; mErrCounter=0;
@@ -109,7 +112,7 @@ Int_t StUPCFilterMaker::Init() {
   //create the output file
   mOutFile = new TFile(mOutName.c_str(), "recreate");
 
-  //output UPC event and tree
+  //output UPC event
   mUPCEvent = new StUPCEvent();
   //configure the UPC event
   if( mIsMC > 0 ) mUPCEvent->setIsMC( kTRUE );
@@ -117,13 +120,18 @@ Int_t StUPCFilterMaker::Init() {
   //configure for Roman Pot event
   if( mMakeRP ) {
     mRPUtil = new StUPCFilterRPUtil();
-    mUPCEvent->makeRPEvent();
+    mRPEvent = new StRPEvent();
   }
 
   //create the tree
   mUPCTree = new TTree("mUPCTree", "mUPCTree");
-  //add branch with event objects
+  //add branch with event object
   mUPCTree->Branch("mUPCEvent", &mUPCEvent);
+
+  //add RP branch
+  if( mMakeRP ) {
+    mUPCTree->Branch("mRPEvent", &mRPEvent);
+  }
 
   //output histograms
   mHistList = new TList();
@@ -149,6 +157,7 @@ Int_t StUPCFilterMaker::Make()
   mUPCEvent->clearEvent(); //clear the output UPC event
   mBemcUtil->clear(); //clear data structures in BEMC util
   if( mRPUtil ) mRPUtil->clear(); // clear data structures in RP util
+  if( mRPEvent ) mRPEvent->clearEvent(); // clear output RP event if present
 
   //input muDst data
   mMuDst = mMaker->muDst();
@@ -381,7 +390,7 @@ Int_t StUPCFilterMaker::Make()
   }//vertex loop
 
   //Roman Pot data
-  if( mRPUtil ) mRPUtil->processEvent(mUPCEvent->getRPEvent(), mMuDst);
+  if( mRPUtil ) mRPUtil->processEvent(mRPEvent, mMuDst);
 
   //write BEMC clusters
   mBemcUtil->writeBEMC(mUPCEvent);
