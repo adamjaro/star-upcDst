@@ -3,7 +3,7 @@
 
 
 #common outputs
-top  /gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/RP_central_elastic_17_v1
+top  /gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/RP_central_elastic_17_v2
 
 #list staged by Tomas
 add_input  list  /gpfs01/star/pwg/truhlar/muDst.list
@@ -33,10 +33,10 @@ bemc_energy_threshold_all 0.1
 outdir   merge_files
 
 #name for merged outputs
-outfile  StUPCRP_central_elastic_17_v1.root
+outfile  StUPCRP_central_elastic_17_v2.root
 
 #list of output files
-outlist  StUPCRP_central_elastic_17_v1.list
+outlist  StUPCRP_central_elastic_17_v2.list
 
 
 
