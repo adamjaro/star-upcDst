@@ -35,6 +35,8 @@ public:
   //getters
   UInt_t getNumberOfClusters() const;
   StUPCRpsCluster *getCluster(Int_t iCluster) const;  
+  TClonesArray *getClusters() const { return mClusters; }
+
   UInt_t getNumberOfTracks() const;
   StUPCRpsTrack *getTrack(Int_t iTrack) const;
   UInt_t getNumberOfTrackPoints() const;
