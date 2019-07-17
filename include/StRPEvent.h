@@ -22,6 +22,7 @@ class StRPEvent
 public:
 
   StRPEvent();
+  StRPEvent(const StRPEvent &evt);
   virtual ~StRPEvent(); 
 
   void clearEvent(); 
@@ -39,8 +40,11 @@ public:
 
   UInt_t getNumberOfTracks() const;
   StUPCRpsTrack *getTrack(Int_t iTrack) const;
+  TClonesArray *getTracks() const { return mTracks; }
+
   UInt_t getNumberOfTrackPoints() const;
   StUPCRpsTrackPoint *getTrackPoint(Int_t iTrackPoint) const;
+  TClonesArray *getTrackPoints() const { return mTrackPoints; }
 
 // Setters, romanPotID == RomanPot ID, planeID == Plane Id, val == value of current setter
 void setSiliconBunch(UChar_t val) 
@@ -179,7 +183,6 @@ UChar_t status(UInt_t romanPotID, UInt_t planeID) const
 
 private:
 
-  StRPEvent (const StRPEvent &o); // not implemented
   StRPEvent &operator=(const StRPEvent &o); // not implemented
 
   static const Int_t mNumberOfRomanPots = 8;

@@ -68,6 +68,47 @@ StRPEvent::StRPEvent():
 }//StRPEvent
 
 //_____________________________________________________________________________
+StRPEvent::StRPEvent(const StRPEvent &evt) {
+
+  //copy constructor
+
+  //one-to-one copy of data values
+
+  mSiliconBunch = evt.mSiliconBunch;
+
+  //Roman Pot loop
+  for (UInt_t iRP = 0; iRP < mNumberOfRomanPots; ++iRP){
+    mNumberPlanes[iRP] = evt.mNumberPlanes[iRP];
+    mNumberPlanesWithCluster[iRP] = evt.mNumberPlanesWithCluster[iRP];
+    mStatusRomanPot[iRP] = evt.mStatusRomanPot[iRP];
+    //PMT loop
+    for (UInt_t iPMT = 0; iPMT < mNumberOfPmtsInRp; ++iPMT){
+      mADC[iRP][iPMT] = evt.mADC[iRP][iPMT];
+      mTAC[iRP][iPMT] = evt.mTAC[iRP][iPMT];
+    }//PMT loop
+    //planes loop
+    for (UInt_t iPlane = 0; iPlane < mNumberOfPlanesInRP; ++iPlane){
+      mOffsetPlane[iRP][iPlane] = evt.mOffsetPlane[iRP][iPlane];
+      mzPlane[iRP][iPlane] = evt.mzPlane[iRP][iPlane];
+      mAnglePlane[iRP][iPlane] = evt.mAnglePlane[iRP][iPlane];
+      mOrientationPlane[iRP][iPlane] = evt.mOrientationPlane[iRP][iPlane];
+      mStatusPlane[iRP][iPlane] = evt.mStatusPlane[iRP][iPlane];
+    }//planes loop
+  }//Roman Pot loop
+
+  //make fresh clones arrays
+  mClusters = new TClonesArray("StUPCRpsCluster");
+  mClusters->SetOwner(kTRUE);
+
+  mTrackPoints = new TClonesArray("StUPCRpsTrackPoint");
+  mTrackPoints->SetOwner(kTRUE);
+
+  mTracks = new TClonesArray("StUPCRpsTrack");
+  mTracks->SetOwner(kTRUE);
+
+}//StRPEvent
+
+//_____________________________________________________________________________
 StRPEvent::~StRPEvent()
 {
   //destructor
