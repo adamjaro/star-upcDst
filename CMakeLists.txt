@@ -12,10 +12,14 @@ set (SRCS
   src/StUPCRpsTrack.cxx
   src/StUPCRpsTrackPoint.cxx
   src/StUPCRpsCluster.cxx
+  src/ArgumentParser.cxx
   )
 
 #name of shared libarary LIB
 set (LIB star-upc)
+
+#binary executables
+set (BIN Analysis)
 
 #sources for ROOT dictionary
 set (SRCS_DICT
@@ -83,8 +87,11 @@ add_custom_command (
 add_library (${LIB} SHARED ${SRCS} ${DICT})
 target_link_libraries(${LIB} ${ROOT_DEPS} )
 
-
-
+#create executables in BIN
+foreach(IBIN ${BIN})
+  add_executable(${IBIN} src/${IBIN}.cxx)
+  target_link_libraries(${IBIN} ${LIB} ${ROOT_DEPS} )
+endforeach(IBIN ${BIN})
 
 
 

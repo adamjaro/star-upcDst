@@ -3,7 +3,7 @@
 
 
 #common outputs
-top  /gpfs01/star/pwg/jaroslav/test/star-upcDst/trees/RP_central_elastic_17_v2
+top  /star/data01/pwg_tasks/upc02/Testv0
 
 #list staged by Tomas
 add_input  list  /gpfs01/star/pwg/truhlar/muDst.list
@@ -13,14 +13,34 @@ is_mc  0  # 0 - data,  1 - starsim MC,  2 - embedding MC
 #write RP data
 make_RP_event  1
 
-#central triggers
-add_trigger   590701	18176013	18178017 # RP_CPT2	rp
-add_trigger   590705	18176013	18178017 # RP_CPT2noBBCL	rp
-add_trigger   590708	18176013	18178017 # RP_CPTnoBBCL	rp
+#RP triggers
+add_trigger   570702	 18062044	18083025 	# RP_UPC	rp #events = 10 M
+add_trigger   570712	 18083026	18149030 	# RP_UPC	rp #events = 39 M
+add_trigger   570703	 18057084	18080040 	# RP_SDT	rp #events = 31 M
+add_trigger   570709	 18057012	18083025 	# RP_ET	rp #events = 99 M
+add_trigger   570719	 18083026	18149030 	# RP_ET	rp #events = 91 M
+add_trigger   570701	 18057074	18083025 	# RP_CPT2	rp  #events = 233 M
+add_trigger   570711	 18083026	18149030 	# RP_CPT2	rp #events = 39 M
+add_trigger   570705	 18083026	18149030 	# RP_CPT2noBBCL	rp #events = 666 M
+add_trigger   570704	 18057084	18149030 	# RP_Zerobias	rp #events = 10 M
 
-#elastic triggers
-add_trigger   590703	18176013	18178017 # RP_SDT	rp
-add_trigger   590709	18176013	18178017 # RP_ET	rp
+add_trigger   590703	 18176013	18178017 	# RP_SDT	RHICf #events = 14 M
+add_trigger   590709	 18176013	18178017 	# RP_ET	RHICf #events = 56 M
+add_trigger   590701	 18176013	18178017 	# RP_CPT2	RHICf  #events = 806 K
+add_trigger   590705	 18176013	18178017 	# RP_CPT2noBBCL	RHICf #events = 140 K
+add_trigger   590708	 18176013	18178017 	# RP_CPTnoBBCL	rRHICf #events = 23 M
+
+add_trigger   1	18055033	18174055   # RP_CPT2	RHICf + rp #events = 1.62 M
+add_trigger   2	18080048	18174055   # RP_CPT2noBBCL	RHICf + rp #events =  4 M
+add_trigger   3	18055054	18174055   # RP_SDT	RHICf + rp #events = 1 M
+add_trigger   4	18174044	18174055   # RP_ET	RHICf #events = 5 M
+add_trigger   5	18174044	18174055   # RP_CPTnoBBCL	RHICf #events = 130 K
+add_trigger   8	18067073	18067086   # RP_IT_PREPOST	rp #events = 861 K
+add_trigger   9	18055033	18055054   # RP_ET	rp #events =  874 K
+add_trigger   9	18067073 18067086   # RP_JP2_PREPOST	rp #events = 393 K
+
+
+
 
 #BEMC clustering
 bemc_cluster_param        1  #  use BEMC cluster conditions below if set to '1'
@@ -33,10 +53,9 @@ bemc_energy_threshold_all 0.1
 outdir   merge_files
 
 #name for merged outputs
-outfile  StUPCRP_central_elastic_17_v2.root
+outfile  StUPCRP_production.root
 
 #list of output files
-outlist  StUPCRP_central_elastic_17_v2.list
-
+outlist  StUPCRP_production.list
 
 
