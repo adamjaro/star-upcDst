@@ -9,6 +9,7 @@
 class StUPCTrack;
 class TClonesArray;
 class StUPCBemcCluster;
+class StUPCTofHit;
 class TIterator;
 class StUPCVertex;
 class TParticle;
@@ -64,7 +65,6 @@ public:
   void setVPDTimeDiff(UShort_t deltaT) { mVPDTimeDiff = deltaT; }
 
   void setTOFMultiplicity(UShort_t tof) { mTofMult = tof; }
-  void setNTofHit(UInt_t tof) { mNTofHit = tof; }
   void setBEMCMultiplicity(UInt_t be) { mBemcMult = be; }
 
   void setNGlobTracks(Int_t ntrk) { mNGlobTracks = ntrk; }
@@ -74,6 +74,8 @@ public:
   StUPCTrack *addTrack();
 
   StUPCBemcCluster *addCluster();
+
+  StUPCTofHit *addHit();
 
   StUPCVertex *addVertex();
 
@@ -119,7 +121,6 @@ public:
   UShort_t getVPDTimeDiff() const { return mVPDTimeDiff; }
 
   UShort_t getTOFMultiplicity() const { return mTofMult; }
-  UInt_t getNTofHit() const { return mNTofHit; }
   UInt_t getBEMCMultiplicity() const { return mBemcMult; }
 
   Int_t getNGlobTracks() const { return mNGlobTracks; }
@@ -133,6 +134,9 @@ public:
   StUPCBemcCluster *getCluster(Int_t iCls) const;
   StUPCBemcCluster *getClusterId(UInt_t clsId) const;
   TIterator *makeClustersIter() const;
+
+  Int_t getNumberOfHits() const;
+  StUPCTofHit *getHit(Int_t iHit) const;
 
   Int_t getNumberOfVertices() const;
   StUPCVertex *getVertex(Int_t iVtx) const;
@@ -188,7 +192,6 @@ private:
   UShort_t mVPDTimeDiff; // VPD time difference
 
   UShort_t mTofMult; // TOF multiplicity from StTriggerData
-  UInt_t mNTofHit; // number of TOF hits from StMuDst::numberOfTofHit
   UInt_t mBemcMult; // BEMC multiplicity, number of all BEMC clusters in event
 
   Int_t mNGlobTracks; // number of global tracks
@@ -202,6 +205,10 @@ private:
   static TClonesArray *mgUPCBemcClusters; // array of BEMC clusters
   TClonesArray *mUPCBemcClusters; //-> array of BEMC clusters
   Int_t mNclusters; //! number of BEMC clusters written in event, local use when filling
+
+  static TClonesArray *mgUPCTOFHits; // array of upc TOF hits
+  TClonesArray *mUPCTOFHits; //-> array of upc TOF hits
+  Int_t mNhits; //! number of TOF hits written in event, local use when filling
 
   static TClonesArray *mgUPCVertices; // array of UPC vertices
   TClonesArray *mUPCVertices; //-> array of UPC vertices

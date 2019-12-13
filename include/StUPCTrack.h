@@ -7,12 +7,12 @@
 //_____________________________________________________________________________
 
 class TLorentzVector;
-class TVector3;
 class StUPCEvent;
 class StUPCBemcCluster;
 class StUPCVertex;
 
 #include "TObject.h"
+#include "TVector3.h"
 
 class StUPCTrack: public TObject
 {
@@ -34,6 +34,9 @@ public:
   void setFlag(Flag flg);
 
   void setPtEtaPhi(Double_t pt, Double_t eta, Double_t phi) {mPt = pt; mEta = eta; mPhi = phi;}
+
+  void setCurvatureDipAnglePhase(Double_t curvature, Double_t dipAngle, Double_t phase) {mCurvature = curvature; mDipAngle = dipAngle; mPhase = phase;}
+  void setOrigin(const TVector3& origin) { mOrigin = origin; }
 
   void setDcaXY(Float_t dca) { mDcaXY = dca; }
   void setDcaZ(Float_t dca) { mDcaZ = dca; }
@@ -69,6 +72,11 @@ public:
   Double_t getPhi() const { return mPhi; }
   void getLorentzVector(TLorentzVector &lvec, Double_t mass) const;
   void getMomentum(TVector3 &vec) const;
+
+  Double_t getCurvature() const { return mCurvature; }
+  Double_t getDipAngle() const { return mDipAngle; }
+  Double_t getPhase() const { return mPhase; }
+  TVector3 getOrigin() const { return mOrigin; }
 
   Float_t getDcaXY() const { return mDcaXY; }
   Float_t getDcaZ() const { return mDcaZ; }
@@ -116,6 +124,11 @@ private:
   Double32_t mPt; // pT at point of dca to primary vertex
   Double32_t mEta; // pseudorapidity at point of dca to primary vertex
   Double32_t mPhi; // phi at point of dca to primary vertex
+
+  Double32_t mCurvature; // curvature of track from StHelix
+  Double32_t mDipAngle; // dip angle of track from StHelix
+  Double32_t mPhase; // phase of track from StHelix
+  TVector3 mOrigin; // origin of track from StHelix
 
   Float_t mDcaXY; // perpendicular dca to primary vertex of associated global track
   Float_t mDcaZ; // longitudinal dca to primary vertex of associated global track
