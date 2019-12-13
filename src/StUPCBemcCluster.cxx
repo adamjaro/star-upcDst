@@ -1,9 +1,9 @@
 
 //_____________________________________________________________________________
 //    Class for UPC data
-//    Author: Tomas Truhlar
+//    Author: Jaroslav Adam
 //
-//    contains parameters of TOF hit relevant for UPC+RP analysis
+//    contains parameters of BEMC cluster relevant for UPC analysis
 //_____________________________________________________________________________
 
 
