@@ -6,17 +6,15 @@
 //    contains parameters of TOF hit relevant for UPC+RP analysis
 //_____________________________________________________________________________
 
-
 //local headers
-#include "StUPCBemcCluster.h"
+#include "StUPCTofHit.h"
 
-ClassImp(StUPCBemcCluster);
+ClassImp(StUPCTofHit);
 
 //_____________________________________________________________________________
-StUPCBemcCluster::StUPCBemcCluster(): TObject(),
-  mEta(0), mPhi(0), mSigmaEta(0), mSigmaPhi(0), mEnergy(0), mId(0),
-  mHTEnergy(0), mHTsoftID(0)
+StUPCTofHit::StUPCTofHit(): TObject(),
+  mTray(0), mModule(0), mCell(0), mLeadingEdgeTime(0), mTrailingEdgeTime(0)
 {
   //default constructor
 
-}//StUPCBemcCluster
+}//StUPCTofHit

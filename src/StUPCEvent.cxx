@@ -14,6 +14,7 @@
 //local headers
 #include "StUPCTrack.h"
 #include "StUPCBemcCluster.h"
+#include "StUPCTofHit.h"
 #include "StUPCVertex.h"
 
 #include "StUPCEvent.h"
@@ -22,6 +23,7 @@ ClassImp(StUPCEvent);
 
 TClonesArray *StUPCEvent::mgUPCTracks = 0;
 TClonesArray *StUPCEvent::mgUPCBemcClusters = 0;
+TClonesArray *StUPCEvent::mgUPCTOFHits = 0;
 TClonesArray *StUPCEvent::mgUPCVertices = 0;
 TClonesArray *StUPCEvent::mgMCParticles = 0;
 
@@ -34,10 +36,11 @@ StUPCEvent::StUPCEvent():
   mZdcTimeDiff(0), mZdcVertexZ(0),
   mBBCSmallEast(0), mBBCSmallWest(0), mBBCLargeEast(0), mBBCLargeWest(0),
   mVPDSumEast(0), mVPDSumWest(0), mVPDTimeDiff(0),
-  mTofMult(0), mNTofHit(0), mBemcMult(0),
+  mTofMult(0), mBemcMult(0),
   mNGlobTracks(0), mNPrimTracks(0),mNPrimVertices(0),
   mUPCTracks(0x0), mNtracks(0),
   mUPCBemcClusters(0x0), mNclusters(0),
+  mUPCTOFHits(0x0), mNhits(0),
   mUPCVertices(0x0), mNvertices(0),
   mMCParticles(0x0), mNmc(0)
 {
@@ -67,6 +70,12 @@ StUPCEvent::StUPCEvent():
     mUPCBemcClusters->SetOwner(kTRUE);
   }
 
+  if(!mgUPCTOFHits) {
+    mgUPCTOFHits = new TClonesArray("StUPCTofHit");
+    mUPCTOFHits = mgUPCTOFHits;
+    mUPCTOFHits->SetOwner(kTRUE);
+  }
+
   if(!mgUPCVertices) {
     mgUPCVertices = new TClonesArray("StUPCVertex");
     mUPCVertices = mgUPCVertices;
@@ -82,6 +91,7 @@ StUPCEvent::~StUPCEvent()
 
   if(mUPCTracks) {delete mUPCTracks; mUPCTracks = 0x0;}
   if(mUPCBemcClusters) {delete mUPCBemcClusters; mUPCBemcClusters = 0x0;}
+  if(mUPCTOFHits) {delete mUPCTOFHits; mUPCTOFHits = 0x0;}
   if(mUPCVertices) {delete mUPCVertices; mUPCVertices = 0x0;}
   if(mMCParticles) {delete mMCParticles; mMCParticles = 0x0;}
 
@@ -101,6 +111,9 @@ void StUPCEvent::clearEvent()
 
   mUPCBemcClusters->Clear("C");
   mNclusters = 0;
+
+  mUPCTOFHits->Clear("C");
+  mNhits = 0;
 
   mUPCVertices->Clear("C");
   mNvertices = 0;
@@ -190,6 +203,15 @@ StUPCBemcCluster *StUPCEvent::addCluster()
   return dynamic_cast<StUPCBemcCluster*>( mUPCBemcClusters->ConstructedAt(mNclusters++) );
 
 }//addCluster
+
+//_____________________________________________________________________________
+StUPCTofHit *StUPCEvent::addHit()
+{
+  // construct new TOF hit
+
+  return dynamic_cast<StUPCTofHit*>( mUPCTOFHits->ConstructedAt(mNhits++) );
+
+}//addHit
 
 //_____________________________________________________________________________
 StUPCVertex *StUPCEvent::addVertex()
@@ -308,6 +330,26 @@ TIterator *StUPCEvent::makeClustersIter() const
   return mUPCBemcClusters->MakeIterator();
 
 }//getClustersIter
+
+//_____________________________________________________________________________
+Int_t StUPCEvent::getNumberOfHits() const {
+
+  //number of TOF hits in event
+
+  if( !mUPCTOFHits ) return 0;
+
+  return mUPCTOFHits->GetEntriesFast();
+
+}//getNumberOfHits
+
+//_____________________________________________________________________________
+StUPCTofHit *StUPCEvent::getHit(Int_t iHit) const
+{
+  // get TOF hit
+
+  return dynamic_cast<StUPCTofHit*>( mUPCTOFHits->At(iHit) );
+
+}//getHit
 
 //_____________________________________________________________________________
 Int_t StUPCEvent::getNumberOfVertices() const {

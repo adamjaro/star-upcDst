@@ -8,6 +8,7 @@ set (SRCS
   src/StUPCTrack.cxx
   src/StUPCBemcCluster.cxx
   src/StUPCVertex.cxx
+  src/StUPCTofHit.cxx
   src/StRPEvent.cxx
   src/StUPCRpsTrack.cxx
   src/StUPCRpsTrackPoint.cxx
@@ -23,6 +24,7 @@ set (SRCS_DICT
   src/StUPCTrack.cxx
   src/StUPCBemcCluster.cxx
   src/StUPCVertex.cxx
+  src/StUPCTofHit.cxx
   src/StRPEvent.cxx
   src/StUPCRpsTrack.cxx
   src/StUPCRpsTrackPoint.cxx

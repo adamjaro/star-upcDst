@@ -29,6 +29,8 @@
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StMuDSTMaker/COMMON/StMuMcTrack.h"
 #include "StMuDSTMaker/COMMON/StMuMcVertex.h"
+#include "StMuDSTMaker/COMMON/StMuBTofHit.h"
+
 #include "StEvent/StTriggerData.h"
 #include "StEvent/StRunInfo.h"
 #include "StEvent/StEventSummary.h"
@@ -38,6 +40,7 @@
 #include "StUPCTrack.h"
 #include "StUPCBemcCluster.h"
 #include "StUPCVertex.h"
+#include "StUPCTofHit.h"
 
 #include "StRPEvent.h"
 
@@ -249,9 +252,6 @@ Int_t StUPCFilterMaker::Make()
     mCounter->Fill( kTrgDat ); // events having trigger data
   }
 
-  //TOF number of hits from StMuDst
-  mUPCEvent->setNTofHit( mMuDst->numberOfTofHit() );
-
   //number of global, primary tracks and vertices
   mUPCEvent->setNGlobTracks( evtSummary.numberOfGoodTracks() );
   mUPCEvent->setNPrimTracks( evtSummary.numberOfGoodPrimaryTracks() );
@@ -337,6 +337,14 @@ Int_t StUPCFilterMaker::Make()
       //UPC track
       StUPCTrack *upcTrack = mUPCEvent->addTrack();
       upcTrack->setPtEtaPhi(track->pt(), track->eta(), track->phi());
+      TVector3 origin(0.0,0.0,0.0);
+      if( track->globalTrack()){
+        origin.SetX(track->globalTrack()->helix().origin().x());
+        origin.SetY(track->globalTrack()->helix().origin().y());
+        origin.SetZ(track->globalTrack()->helix().origin().z());
+        upcTrack->setCurvatureDipAnglePhase(track->globalTrack()->helix().curvature(), track->globalTrack()->helix().dipAngle(), track->globalTrack()->helix().phase() );
+      }
+      upcTrack->setOrigin(origin);
       upcTrack->setDcaXY( track->dcaGlobal().perp() );
       upcTrack->setDcaZ( track->dcaGlobal().z() );
       upcTrack->setCharge( track->charge() );
@@ -388,6 +396,23 @@ Int_t StUPCFilterMaker::Make()
     upcVtx->setId( ivtx );
 
   }//vertex loop
+
+
+  // TOF hit loop
+  for(UInt_t ihit=0; ihit < mMuDst->numberOfBTofHit(); ihit++) {
+    // get hit from muDst
+    StMuBTofHit  *tofhit = mMuDst->btofHit(ihit);
+    if( !tofhit ) continue;
+    //put hit in clones array in UPC event
+    StUPCTofHit *upcHit = mUPCEvent->addHit();
+    upcHit->setTray(tofhit->tray());
+    upcHit->setModule(tofhit->module());
+    upcHit->setCell(tofhit->cell());
+    upcHit->setLeadingEdgeTime(tofhit->leadingEdgeTime());
+    upcHit->setTrailingEdgeTime(tofhit->trailingEdgeTime());
+
+  }
+
 
   //Roman Pot data
   if( mRPUtil ) mRPUtil->processEvent(mRPEvent, mMuDst);

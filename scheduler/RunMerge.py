@@ -34,7 +34,7 @@ if __name__ == "__main__":
     for q in qlist: pattern += q[0]+","
     pattern = pattern[:-1]
     if len(qlist) > 1: pattern = "{"+pattern+"}"
-    pattern = "/"+pattern+"/*.root"
+    pattern = pattern+"/*.root"
 
     outdir = parser.get("outdir")
     outfile = parser.get("outfile")
