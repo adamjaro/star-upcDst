@@ -8,6 +8,9 @@ void AddTrigger(UInt_t id, Int_t rmin, Int_t rmax);
 //_____________________________________________________________________________
 void RunFilterMaker(string filelist, Int_t nFiles, string outfile, string config) {
 
+  //print the full list of files including their size
+  PrintFilelist(filelist);
+
   //load libraries to work with muDst
   gROOT->Macro("loadMuDst.C");
 
@@ -154,6 +157,30 @@ void AddTrigger(UInt_t id, Int_t rmin, Int_t rmax) {
 
 }//AddTrigger
 
+//_____________________________________________________________________________
+void PrintFilelist(const string& filelist) {
+
+  //print the full list of files including their size
+
+  cout << "------- In RunFilterMaker.C, the list of files is: -------" << endl;
+
+  ifstream in(filelist.c_str());
+
+  string line;
+  while(in.good()) {
+    getline(in, line);
+    if(line.empty()) continue;
+
+    string cmd = "ls " + line + " -alh";
+
+    gSystem->Exec(cmd.c_str());
+  }
+
+  cout << "------------------ End of list of files ------------------" << endl;
+
+  in.close();
+
+}//PrintFilelist
 
 
 
