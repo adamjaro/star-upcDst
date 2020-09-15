@@ -34,13 +34,16 @@ if __name__ == "__main__":
     parser.add_parameter("add_input", list)
     parser.add_parameter("nfiles", int) # number of files for local running
     parser.add_parameter("outfile") # output file for local running
+    parser.add_parameter("star_version") # version of STAR software
 
     #default values for some parameters
     parser.set_default("macro", "RunFilterMaker.C") #macro to run the maker
     parser.set_default("scheduler", "scheduler_template.xml") #name of scheduler template macro
     parser.set_default("submit", "star-submit") #command to submit
     parser.set_default("nfiles", 999999)
+    parser.set_default("star_version", "pro")
 
+    #load the configuration
     parser.parse(config)
 
     top = parser.get("top")
@@ -48,6 +51,7 @@ if __name__ == "__main__":
     scheduler = parser.get("scheduler")
     submit = parser.get("submit")
     qlist = parser.get("add_input")
+    star_version = parser.get("star_version")
 
     #directory with config file is assumed the same as for this macro
     confdir = os.getcwd()
@@ -63,6 +67,7 @@ if __name__ == "__main__":
     print "  Maker macro:                      ", macro
     print "  Scheduler xml template:           ", scheduler
     print "  Submit command:                   ", submit
+    print "  STAR software version:            ", star_version
 
     #prototypes for input from catalog query or from filelist
     in_query = ["<input URL=\"catalog:star.bnl.gov?", "\" nFiles=\"all\" />"]
@@ -106,6 +111,7 @@ if __name__ == "__main__":
             line = re.sub(r"__MACRO__", macro, line)
             line = re.sub(r"__CONFIG__", config, line)
             line = re.sub(r"__CONFDIR__", confdir, line)
+            line = re.sub(r"__STAR_VERSION__", star_version, line)
             if q[1].find(".list") < 0:
                 #input is catalog query
                 line = re.sub(r"__INPUT__", in_query[0]+q[1]+in_query[1], line)

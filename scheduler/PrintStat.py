@@ -32,7 +32,7 @@ if __name__ == "__main__":
     for job in glob(basedir + "/sched/*_*.csh"):
         joblist.append( job.split("sched/sched")[1].split(".csh")[0] )
 
-    print "Submitted:", len(joblist)
+    print "Submitted:".ljust(10), len(joblist)
 
     #running jobs
     running = []
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         if jobid not in joblist: continue
         running.append(jobid)
 
-    print "Running:", len(running)
+    print "Running:".ljust(10), len(running)
 
     #done jobs
     donelist = []
@@ -75,9 +75,9 @@ if __name__ == "__main__":
             continue
         missing.append(job)
 
-    print "Errors:", len(missing)
+    print "Errors:".ljust(10), len(missing)
 
-    print "Done:", len(donelist)
+    print "Done:".ljust(10), len(donelist)
     print "Output total size:".ljust(20), totsiz, "K"
     print "".ljust(20), ceil(float(totsiz)/1024), "M"
     print "".ljust(20), ceil(float(totsiz)/1024**2), "G"

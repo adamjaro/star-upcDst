@@ -8,7 +8,8 @@
     ls -alh
     hostname
 
-    starpro
+    starver __STAR_VERSION__
+
     echo $STAR
     echo $OPTSTAR
 
