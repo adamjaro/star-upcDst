@@ -132,12 +132,12 @@ Finally, to clean up after all outputs are produced correctly, type:
 Modify the same config with different "add_input", can be either a filelist or catalog. 
 
 
-#Complete production guide to star-upcDst
+# Complete production guide to star-upcDst
 
 Instructions to run UPC+RP picoDst (upcDst) production are given here,
 along with a list of all production options.
 
-##Start the production:
+## Start the production
 
 Production options are set in a file like  production.in
 
@@ -154,7 +154,7 @@ input as set with 'add_input' option.
 
 Comments in the file with production options start with #
 
-##Merging the outputs:
+## Merging the outputs
 
 Output files to each individual input are merged to files
 per about 1 GB in size to speed up the analysis and to make
@@ -171,7 +171,7 @@ Merged outputs are written to directory specified by 'outdir'
 production option, have name derived from 'outfile' option
 and list of all produced outputs is written into 'outlist'.
 
-##Overview of running production and resubmission of failed jobs:
+## Overview of running production and resubmission of failed jobs
 
 An overview of ongoing production can be printed as:
 
@@ -182,21 +182,21 @@ option:
 
 <pre><code> ./PrintStat.py -r -c production.in </pre></code>
 
-##Example configurations on github:
+## Example configurations on github
 
-<pre><code> config_JpsiB_run14.in </pre></code>
+- config_JpsiB_run14.in
 
 Data on J/psi -> e+e- with UPCJpsiB trigger in Run14 AuAu
 
-<pre><code> config_main_JpsiB_run14.in </pre></code>
+- config_main_JpsiB_run14.in
 
 The same data on J/psi -> e+e- but also with UPC-main trigger
 
-<pre><code> config_MC_local.in </pre></code>
+- config_MC_local.in
 
 Local running with MC files from coherent J/psi embedding
 
-<pre><code> config_RP_run17.in </pre></code>
+- config_RP_run17.in
 
 Production with Roman Pot data
 
