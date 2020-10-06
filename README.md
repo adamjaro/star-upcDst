@@ -132,8 +132,77 @@ Finally, to clean up after all outputs are produced correctly, type:
 Modify the same config with different "add_input", can be either a filelist or catalog. 
 
 
+#Complete production guide to star-upcDst
+
+Instructions to run UPC+RP picoDst (upcDst) production are given here,
+along with a list of all production options.
+
+##Start the production:
+
+Production options are set in a file like  production.in
+
+Command to start the production is:
+
+<pre><code> ./SubmitPlugin.py production.in </pre></code>
+
+executed from  star-upcDst/scheduler/
+
+All the outputs and scheduler files are written to a directory
+structure in 'top' directory as set in the options. Outputs
+for each input are in the 'top' under the name of a given
+input as set with 'add_input' option.
+
+Comments in the file with production options start with #
+
+##Merging the outputs:
+
+Output files to each individual input are merged to files
+per about 1 GB in size to speed up the analysis and to make
+it easier to handle the output.
+
+Using the same file with production options, like the above
+example of  production.in,  the merging is started as
+
+<pre><code> ./RunMerge.py production.in </pre></code>
+
+again executed from  star-upcDst/scheduler/
+
+Merged outputs are written to directory specified by 'outdir'
+production option, have name derived from 'outfile' option
+and list of all produced outputs is written into 'outlist'.
+
+##Overview of running production and resubmission of failed jobs:
+
+An overview of ongoing production can be printed as:
+
+<pre><code> ./PrintStat.py -c production.in </pre></code>
+
+To resubmit jobs in error state run the above with '-r'
+option:
+
+<pre><code> ./PrintStat.py -r -c production.in </pre></code>
+
+##Example configurations on github:
+
+<pre><code> config_JpsiB_run14.in </pre></code>
+
+Data on J/psi -> e+e- with UPCJpsiB trigger in Run14 AuAu
+
+<pre><code> config_main_JpsiB_run14.in </pre></code>
+
+The same data on J/psi -> e+e- but also with UPC-main trigger
+
+<pre><code> config_MC_local.in </pre></code>
+
+Local running with MC files from coherent J/psi embedding
+
+<pre><code> config_RP_run17.in </pre></code>
+
+Production with Roman Pot data
+
+
 ## Contact:
-Adam, Jaroslav: <JaroslavAdam@creighton.edu>
+Adam, Jaroslav: <jadam@bnl.gov>
 
 
 
