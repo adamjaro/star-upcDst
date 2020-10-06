@@ -200,6 +200,42 @@ Local running with MC files from coherent J/psi embedding
 
 Production with Roman Pot data
 
+## Production options
+
+### Required
+
+- top <top name>
+
+    main directory for production outputs
+
+- add_input <input name> <catalog query or filelist>
+
+    inputs to the production, could be catalog query
+    or filelist (full path for filelist and should end with .list)
+
+    Could be any number of  add_input  in a single production
+
+- add_trigger <trigger ID> <first run> <last run>
+
+    trigger ID and run range for each ID
+
+    Could be any number of individual trigger IDs. Both first run
+    and last run belong to the range.
+
+    The IDs are not considered with MC (both starsim and embedding)
+
+- outfile <name>
+
+    name for merged outputs
+
+- outdir <name>
+
+    directory for merged outputs, relative to top
+
+- outlist <name>
+
+    list of output files after merging
+
 
 ## Contact:
 Adam, Jaroslav: <jadam@bnl.gov>
