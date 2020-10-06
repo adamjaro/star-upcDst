@@ -204,11 +204,11 @@ Production with Roman Pot data
 
 ### Required
 
-- top <top name>
+- top `<top name>`
 
     main directory for production outputs
 
-- add_input <input name> <catalog query or filelist>
+- add_input `<input name>` `<catalog query or filelist>`
 
     inputs to the production, could be catalog query
     or filelist (full path for filelist and should end with .list)
