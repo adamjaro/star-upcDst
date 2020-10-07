@@ -132,10 +132,10 @@ Finally, to clean up after all outputs are produced correctly, type:
 Modify the same config with different "add_input", can be either a filelist or catalog. 
 
 
-# Complete production guide to star-upcDst
+# Complete production guide
 
-Instructions to run UPC+RP picoDst (upcDst) production are given here,
-along with a list of all production options.
+Full instructions to run the production are given here,
+along with list of all production options.
 
 ## Start the production
 
@@ -186,19 +186,19 @@ option:
 
 - config_JpsiB_run14.in
 
-Data on J/psi -> e+e- with UPCJpsiB trigger in Run14 AuAu
+    Data on J/psi -> e+e- with UPCJpsiB trigger in Run14 AuAu
 
 - config_main_JpsiB_run14.in
 
-The same data on J/psi -> e+e- but also with UPC-main trigger
+    The same data on J/psi -> e+e- but also with UPC-main trigger
 
 - config_MC_local.in
 
-Local running with MC files from coherent J/psi embedding
+    Local running with MC files from coherent J/psi embedding
 
 - config_RP_run17.in
 
-Production with Roman Pot data
+    Production with Roman Pot data
 
 ## Production options
 
@@ -235,6 +235,60 @@ Production with Roman Pot data
 - `outlist <name>`
 
     list of output files after merging
+
+### Optional, default value in parenthesis
+
+- `is_mc (0)`
+
+    data/MC, possible values:  0 - data,  1 - starsim MC,  2 - embedding MC
+
+    The 'starsim' writes all central tracks to the output
+    while 'embedding' selects only tracks matched to BEMC
+    or TOF like with real data.
+
+- `make_RP_event (0)`
+
+    write Roman Pot data if set to 1
+
+- `tof_start_zero (0)`
+
+    use TOF start time override to zero if set to 1
+
+- `submit (star-submit)`
+
+    command to submit, possible values:  star-submit - use scheduler
+    to submit as its jobs,  local - local running by root4star
+
+- `star_version (pro)`
+
+    version of STAR software when running with scheduler
+
+- `nfiles (999999)`
+
+    max number of files per input with local running,
+    default value stands for all
+
+- `macro (RunFilterMaker.C)`
+
+    macro to run production maker
+
+- `scheduler (scheduler_template.xml)`
+
+    name of scheduler template macro
+
+- `bemc_cluster_param (0)`
+
+    use BEMC cluster conditions below if set to 1. The conditions
+    are specified by bemc_size_max, bemc_energy_seed, bemc_energy_add
+    and bemc_energy_threshold_all.
+
+- `bemc_size_max (4)`
+
+- `bemc_energy_seed (0.4)`
+
+- `bemc_energy_add (0.001)`
+
+- `bemc_energy_threshold_all (0.4)`
 
 
 ## Contact:
