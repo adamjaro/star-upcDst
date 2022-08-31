@@ -292,7 +292,7 @@ option:
 
 
 ## Contact:
-Jaroslav Adam: <jadam@bnl.gov>
+Jaroslav Adam: <jaroslav@rcf.rhic.bnl.gov>
 
 
 
