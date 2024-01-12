@@ -1,0 +1,15 @@
+
+#example configuration for reading picoDst
+
+macro RunFromPicoDst.C
+
+top /star/u/jaroslav/test/picodst_read/prod
+
+add_input test_picodst /star/u/jaroslav/star-upcDst/scheduler/test_picodst_local.list
+
+submit local
+
+outfile out.root
+
+outdir out
+

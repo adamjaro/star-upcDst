@@ -21,3 +21,6 @@ txt/
 *.txt~
 *.cxx~
 *.in~
+*.h~
+*.C~
+*.list~
