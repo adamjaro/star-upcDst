@@ -23,10 +23,12 @@ class StUPCMakerFromPicoDst: public StMaker {
 
  private:
 
-  void setUpcTrackFromPicoTrack(StUPCTrack *utrk, StPicoTrack *ptrk);
+  void setUpcTrackFromPicoTrack(StUPCTrack *utrk, StPicoTrack *ptrk, bool writeBemc=false);
 
   StPicoDstMaker *mPicoDstMaker; // maker for picoDst provided to the constructor
   StPicoDst *mPicoDst; // input picoDst data
+
+  StEmcGeom *mBemcGeom; // BEMC geometry
 
   string mOutName;  // name of the output file
   TFile *mOutFile;  // output file

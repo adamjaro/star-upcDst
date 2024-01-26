@@ -3,8 +3,10 @@
 #include <iostream>
 
 #include "StUPCV0.h"
-#include "SystemOfUnits.h" // ??
 
+#include "StPicoPhysicalHelix.h"
+#include "SystemOfUnits.h"
+#include "StUPCTrack.h"
 
 using namespace std;
 
@@ -14,6 +16,7 @@ ClassImp(StUPCV0)
 StUPCV0::StUPCV0(): mLorentzVector(TLorentzVector()), mDecayVertex(TVector3()),
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
+  mParticle1Idx(std::numeric_limits<unsigned short>::max()), mParticle2Idx(std::numeric_limits<unsigned short>::max()),
   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()),
   mThetaProdPlane(std::numeric_limits<float>::quiet_NaN()), mProdPlane(TVector3()) {
 }
@@ -22,16 +25,19 @@ StUPCV0::StUPCV0(): mLorentzVector(TLorentzVector()), mDecayVertex(TVector3()),
 StUPCV0::StUPCV0(StUPCV0 const * t) : mLorentzVector(t->mLorentzVector), mDecayVertex(t->mDecayVertex),
    mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength),
    mParticle1Dca(t->mParticle1Dca), mParticle2Dca(t->mParticle2Dca),
+   mParticle1Idx(t->mParticle1Idx), mParticle2Idx(t->mParticle2Idx),
    mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar),
    mThetaProdPlane(t->mThetaProdPlane), mProdPlane(t->mProdPlane) {
 }
 
 // _________________________________________________________
-StUPCV0::StUPCV0(StPicoTrack const * const particle1, StPicoTrack const * const particle2, float p1MassHypo, float p2MassHypo,
-           TVector3 const & vtx, double * beamLine, float const bField, bool const useStraightLine) : 
+StUPCV0::StUPCV0(StUPCTrack const * const particle1, StUPCTrack const * const particle2,
+		   float p1MassHypo, float p2MassHypo, unsigned short const p1Idx, unsigned short const p2Idx,
+		   TVector3 const & vtx, double * beamLine, float const bField, bool const useStraightLine) : 
   mLorentzVector(TLorentzVector()), mDecayVertex(TVector3()),
   mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
   mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
+  mParticle1Idx(p1Idx), mParticle2Idx(p2Idx),
   mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()) {
   // -- Create pair out of 2 tracks
   //     prefixes code:
@@ -39,21 +45,32 @@ StUPCV0::StUPCV0(StPicoTrack const * const particle1, StPicoTrack const * const 
   //      p2 means particle 2
   //      pair means particle1-particle2  pair
 
+// StUPCTrack do not have id() method :: to do  
+/*
+  if ((!particle1 || !particle2) || (particle1->id() == particle2->id())) {
+    mParticle1Idx = std::numeric_limits<unsigned short>::max();
+    mParticle2Idx = std::numeric_limits<unsigned short>::max();
+    return;
+  }
+*/
 
-  TVector3 origin1 = particle1->origin();
-  StPicoPhysicalHelix p1Helix = StPicoPhysicalHelix (particle1->helix(bField).curvature(), 
-                                                     particle1->helix(bField).dipAngle(), 
-                                                     particle1->helix(bField).phase(), 
-                                                     origin1,
-                                                     particle1->charge() );
+// StUPCTrack do not have helix() method :: to do
+/*
+  StPicoPhysicalHelix p1Helix = particle1->helix(bField); 
+  StPicoPhysicalHelix p2Helix = particle2->helix(bField); //bFiled not in kilogauss - is properly computed inside helix(double B) function in StUPCTrack.h
+*/
+ 
+  StPicoPhysicalHelix p1Helix = StPicoPhysicalHelix (particle1->getCurvature(), 
+                                                     particle1->getDipAngle(), 
+                                                     particle1->getPhase(), 
+                                                     particle1->getOrigin(),
+                                                     particle1->getCharge());
 
-  TVector3 origin2 = particle2->origin();
-  StPicoPhysicalHelix p2Helix = StPicoPhysicalHelix (particle2->helix(bField).curvature(), 
-                                                     particle2->helix(bField).dipAngle(), 
-                                                     particle2->helix(bField).phase(), 
-                                                     origin2,
-                                                     particle2->charge() );
-
+  StPicoPhysicalHelix p2Helix =	StPicoPhysicalHelix (particle2->getCurvature(), 
+                                                     particle2->getDipAngle(), 
+                                                     particle2->getPhase(), 
+                                                     particle2->getOrigin(),
+                                                     particle2->getCharge());
   p1Helix.moveOrigin(p1Helix.pathLength(vtx,false));
   p2Helix.moveOrigin(p2Helix.pathLength(vtx,false));
 
@@ -63,8 +80,8 @@ StUPCV0::StUPCV0(StPicoTrack const * const particle1, StPicoTrack const * const 
   TVector3 const p1Mom = p1Helix.momentum(bField * kilogauss);
   TVector3 const p2Mom = p2Helix.momentum(bField * kilogauss);
 
-  StPicoPhysicalHelix const p1StraightLine(p1Mom, p1Helix.origin(), 0, particle1->charge());
-  StPicoPhysicalHelix const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2->charge());
+  StPicoPhysicalHelix const p1StraightLine(p1Mom, p1Helix.origin(), 0, particle1->getCharge());
+  StPicoPhysicalHelix const p2StraightLine(p2Mom, p2Helix.origin(), 0, particle2->getCharge());
 
   pair<double, double> const ss = (useStraightLine) ? p1StraightLine.pathLengths(p2StraightLine) : p1Helix.pathLengths(p2Helix);
   TVector3 const p1AtDcaToP2 = (useStraightLine) ? p1StraightLine.at(ss.first) : p1Helix.at(ss.first);
@@ -85,9 +102,13 @@ StUPCV0::StUPCV0(StPicoTrack const * const particle1, StPicoTrack const * const 
 
   // -- calculate cosThetaStar
   TLorentzVector const pairFourMomReverse(-mLorentzVector.Px(), -mLorentzVector.Py(), -mLorentzVector.Pz(), mLorentzVector.E());
-  TLorentzVector p1FourMomStar = p1FourMom;
-  p1FourMomStar.Boost(pairFourMomReverse.BoostVector());  
-  mCosThetaStar = std::cos(p1FourMomStar.Vect().Angle(mLorentzVector.Vect()));
+  TLorentzVector FourMomStar;
+  if ( particle1->getCharge() == 1 ) {
+    FourMomStar = p1FourMom; }
+  else { 
+    FourMomStar = p2FourMom; }
+  FourMomStar.Boost(pairFourMomReverse.BoostVector());  
+  mCosThetaStar = std::cos(FourMomStar.Vect().Angle(mLorentzVector.Vect()));
 
 //  TVector3 beamVector(0.,0.,1.); //unity vector along the beam axis
   TVector3 beamVector(beamLine[2],beamLine[3],1.); //unity vector along the beam axis with beamLine3D
@@ -95,7 +116,7 @@ StUPCV0::StUPCV0(StPicoTrack const * const particle1, StPicoTrack const * const 
   TVector3 mProdPlane_work = beamVector.Cross(mLorentzVector.Vect());
   mProdPlane = ( mProdPlane_work )*(1./mProdPlane_work.Mag() ); //unity normal vector to production plane
 
-  mThetaProdPlane = mProdPlane.Angle(p1FourMomStar.Vect());
+  mThetaProdPlane = mProdPlane.Angle(FourMomStar.Vect());
   
   // -- calculate decay vertex (secondary or tertiary) 
   mDecayVertex = (p1AtDcaToP2 + p2AtDcaToP1) * 0.5 ;
@@ -157,3 +178,6 @@ float StUPCV0::particle2Dca(StPicoPhysicalHelix  p2Helix, TVector3 const & vtx2,
   float const nParticle2Dca = (p2Helix.origin()  - vtx2).Mag();
   return nParticle2Dca;
 }
+
+
+

@@ -7,7 +7,7 @@ DEST="StRoot/StUPCFilterMaker"
 srclist=( StUPCBemcCluster StUPCEvent StUPCFilterMaker StUPCFilterBemcUtil StUPCFilterTrgUtil
 StUPCTrack StUPCVertex StUPCTofHit
 StRPEvent StUPCRpsTrack StUPCRpsTrackPoint StUPCRpsCluster StUPCFilterRPUtil
-StUPCMakerFromPicoDst StUPCSelectV0 StUPCV0 )
+StUPCMakerFromPicoDst StUPCSelectV0 StUPCV0 StPicoPhysicalHelix StPicoHelix )
 
 mkdir -p $DEST
 

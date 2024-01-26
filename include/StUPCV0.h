@@ -23,9 +23,8 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 
-
-#include "StPicoEvent/StPicoPhysicalHelix.h"
-#include "StPicoEvent/StPicoTrack.h"
+class StUPCTrack;
+class StPicoPhysicalHelix;
 
 class StUPCV0 : public TObject
 {
@@ -33,9 +32,10 @@ class StUPCV0 : public TObject
   StUPCV0();
   StUPCV0(StUPCV0 const *);
 
-  StUPCV0(StPicoTrack const * particle1, StPicoTrack const * particle2, 
-       float p1MassHypo, float p2MassHypo,
-       TVector3 const & vtx, double * beamLine, float bField, bool useStraightLine = true);
+  StUPCV0(StUPCTrack const * particle1, StUPCTrack const * particle2, 
+	   float p1MassHypo, float p2MassHypo,
+	   unsigned short p1Idx, unsigned short p2Idx,
+	   TVector3 const & vtx, double * beamLine, float bField, bool useStraightLine = true);
 
   ~StUPCV0() {;}
   
@@ -71,6 +71,8 @@ class StUPCV0 : public TObject
   float py() const;
   float pz() const;
   float DcaToPrimaryVertex() const;
+  float alphaAP() const;
+  float ptAP() const;
 
  private:
   StUPCV0(StUPCV0 const &);
@@ -90,10 +92,14 @@ class StUPCV0 : public TObject
   float mParticle2Dca;
   float mDcaToPrimaryVertex;
 
+  unsigned short  mParticle1Idx; // index of track in StUPCDstEvent 
+  unsigned short  mParticle2Idx; // index of track in StUPCDstEvent for particle, idx in tertiary vertex array for pair 
+
   float mDcaDaughters;
   float mCosThetaStar;
   float mThetaProdPlane; //anlgle between momentum of particle1 and mProdPlane vector in mother rest frame
-
+  float mAlphaAP;
+  float mPtAP;
   ClassDef(StUPCV0,2)
 };
 
@@ -113,6 +119,8 @@ inline float StUPCV0::decayLengthHypo()   const { return mDecayLengthHypo;}
 inline float StUPCV0::DCABeamLine()   const { return mDCABeamLine;}
 inline float StUPCV0::particle1Dca()  const { return mParticle1Dca;}
 inline float StUPCV0::particle2Dca()  const { return mParticle2Dca;}
+inline unsigned short StUPCV0::particle1Idx() const { return mParticle1Idx;}
+inline unsigned short StUPCV0::particle2Idx() const { return mParticle2Idx;}
 inline float StUPCV0::dcaDaughters() const { return mDcaDaughters;}
 inline float StUPCV0::cosThetaStar() const { return mCosThetaStar;}
 inline float StUPCV0::thetaProdPlane() const { return mThetaProdPlane;}
@@ -122,4 +130,7 @@ inline float StUPCV0::v0x() const { return mDecayVertex.x();}
 inline float StUPCV0::v0y() const { return mDecayVertex.y();}
 inline float StUPCV0::v0z() const { return mDecayVertex.z();}
 inline float StUPCV0::DcaToPrimaryVertex() const { return mDcaToPrimaryVertex; }
+inline float StUPCV0::alphaAP() const { return mAlphaAP; }
+inline float StUPCV0::ptAP() const { return mPtAP; }
 #endif
+

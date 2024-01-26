@@ -18,11 +18,14 @@
 #include "StPicoDstMaker/StPicoDstMaker.h"
 #include "StPicoEvent/StPicoEvent.h"
 #include "StPicoEvent/StPicoTrack.h"
+#include "StPicoEvent/StPicoBEmcPidTraits.h"
+#include "StEmcUtil/geometry/StEmcGeom.h"
 
 //upcDst
 #include "StUPCEvent.h"
 #include "StUPCSelectV0.h"
 #include "StUPCTrack.h"
+#include "StUPCBemcCluster.h"
 
 //local classes
 #include "StUPCMakerFromPicoDst.h"
@@ -68,6 +71,9 @@ Int_t StUPCMakerFromPicoDst::Init() {
   //selector for tracks from V0
   mSelectV0 = new StUPCSelectV0();
 
+  //geometry for BEMC
+  mBemcGeom = StEmcGeom::getEmcGeom("bemc");
+
   return kStOk;
 
 }//Init
@@ -83,23 +89,30 @@ Int_t StUPCMakerFromPicoDst::Make() {
 
   mCounter->Fill( kAna ); // analyzed events
 
-  //run number and event number
-  mUPCEvent->setRunNumber( mPicoDst->event()->runId() );
-  mUPCEvent->setEventNumber( mPicoDst->event()->eventId() );
-
   //tracks in event
   UInt_t nTracks = mPicoDst->numberOfTracks();
 
   //flag to filter picoDst tracks for writing to upcDst output
   vector<bool> trackFilter(nTracks);
 
-  //initialize the flags with false (true is to write the track to the output)
-  for(size_t i=0; i<trackFilter.size(); i++) trackFilter[i] = false;
+  //UPC tracks for filtering
+  vector<StUPCTrack> upcTracks(nTracks);
+
+  //tracks loop to initialize for filtering
+  for(UInt_t itrk=0; itrk<nTracks; itrk++) {
+
+    //initialize the flags with false (true is to write the track to the output)
+    trackFilter[itrk] = false;
+
+    //set the UPC tracks from picoDst tracks
+    setUpcTrackFromPicoTrack(&upcTracks[itrk], mPicoDst->track(itrk));
+
+  }//tracks loop to initialize
 
   //cout << "Tracks: " << nTracks << " " << trackFilter.size() << endl;
 
   //select tracks from V0 candidates
-  int nsel = mSelectV0->selectTracks(mPicoDst, trackFilter);
+  int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mPicoDst);
 
   //other selections for J/psi and CEP to go here
 
@@ -121,9 +134,16 @@ Int_t StUPCMakerFromPicoDst::Make() {
     StUPCTrack *upcTrack = mUPCEvent->addTrack();
 
     //set the upc track from the current pico track
-    setUpcTrackFromPicoTrack(upcTrack, mPicoDst->track(itrk));
+    setUpcTrackFromPicoTrack(upcTrack, mPicoDst->track(itrk), true);
 
   }//tracks loop
+
+  //run number and event number
+  mUPCEvent->setRunNumber( mPicoDst->event()->runId() );
+  mUPCEvent->setEventNumber( mPicoDst->event()->eventId() );
+
+  //magnetic field
+  mUPCEvent->setMagneticField(mPicoDst->event()->bField());
 
   mCounter->Fill( kWritten ); // events with written upcDst output
 
@@ -153,7 +173,9 @@ Int_t StUPCMakerFromPicoDst::Finish() {
 }//Finish
 
 //_____________________________________________________________________________
-void StUPCMakerFromPicoDst::setUpcTrackFromPicoTrack(StUPCTrack *utrk, StPicoTrack *ptrk) {
+void StUPCMakerFromPicoDst::setUpcTrackFromPicoTrack(StUPCTrack *utrk, StPicoTrack *ptrk, bool writeBemc) {
+
+  if(!ptrk) return;
 
   TVector3 trackMom = ptrk->gMom();
   utrk->setPtEtaPhi(ptrk->gPt(), trackMom.Eta(), trackMom.Phi());
@@ -175,10 +197,47 @@ void StUPCMakerFromPicoDst::setUpcTrackFromPicoTrack(StUPCTrack *utrk, StPicoTra
   utrk->setNSigmasTPC( StUPCTrack::kKaon, ptrk->nSigmaKaon() );
   utrk->setNSigmasTPC( StUPCTrack::kProton, ptrk->nSigmaProton() );
 
-  //BEMC to go here
-
   //TOF
   if( ptrk->isTofTrack() ) utrk->setFlag( StUPCTrack::kTof );
+
+  //write the BEMC only when requested
+  if( !writeBemc ) return;
+
+  //BEMC matching
+  //cout << "BEMC: " << mPicoDst->numberOfBEmcPidTraits() << endl;
+  if( ptrk->bemcPidTraitsIndex() >= 0 ) {
+    //track is matched to BEMC
+    //cout << "BEMC: " << ptrk->bemcPidTraitsIndex() << endl;
+
+    //BEMC PID
+    StPicoBEmcPidTraits *bemcPID = mPicoDst->bemcPidTraits( ptrk->bemcPidTraitsIndex() );
+
+    utrk->setFlag( StUPCTrack::kBemc );
+    utrk->setBemcHitE( bemcPID->btowE() );
+
+    //tower ID
+    Int_t towId = bemcPID->btowId();
+
+    //cluster for valid tower ID
+    if( towId > 0 and towId < 4801 ) {
+
+      Float_t eta=-9e9, phi=-9e9;
+      mBemcGeom->getEta(towId, eta);
+      mBemcGeom->getPhi(towId, phi);
+
+      StUPCBemcCluster *upcCls = mUPCEvent->addCluster();
+      upcCls->setEnergy( bemcPID->bemcE() );
+      upcCls->setEta(eta);
+      upcCls->setPhi(phi);
+      upcCls->setId( mUPCEvent->getNumberOfClusters() ); // cluster ID by number of clusters
+      utrk->setBemcClusterId( mUPCEvent->getNumberOfClusters() ); // same cluster ID for track
+
+      //cout << "BEMC cluster:" << mUPCEvent->getNumberOfClusters() << endl;
+
+    }
+  }
+
+
 
 }//setUpcTrackFromPicoTrack
 

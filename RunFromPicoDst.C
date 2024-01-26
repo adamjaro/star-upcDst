@@ -7,7 +7,7 @@ void RunFromPicoDst(string filelist, Int_t nFiles, string outfile, string config
 
   PrintFilelist(filelist);
 
-  //string filelist = "/star/u/vanekjan/pwg/vanekjan/myLambdaAnalysis/pp/input_local/SL21d/st_physics_18056115_raw_1000009.picoDst.root";
+  //string filelist = "/star/u/jaroslav/test/data/pp/SL21d/st_physics_18056115_raw_1000009.picoDst.root";
   //string outfile = "out.root";
 
   //libraries to access the picoDst

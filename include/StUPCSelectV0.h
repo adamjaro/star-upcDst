@@ -6,8 +6,7 @@ class StUPCSelectV0 {
 
  public:
 
-  int selectTracks(StPicoDst *pd, std::vector<bool>& sel);
-
+  int selectTracks(std::vector<StUPCTrack>& tracks, std::vector<bool>& sel, StPicoDst *pd);
 
 };
 
