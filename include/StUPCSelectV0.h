@@ -6,7 +6,7 @@ class StUPCSelectV0 {
 
  public:
 
-  int selectTracks(std::vector<StUPCTrack>& tracks, std::vector<UChar_t>& sel, StPicoDst *pd);
+  int selectTracks(std::vector<StUPCTrack>& tracks, std::vector<UChar_t>& sel, StPicoDst *pd, TVector3 const & vertex, double *beamline);
 
 };
 

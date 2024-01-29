@@ -63,6 +63,9 @@ public:
 
   void setEvent(StUPCEvent *evt) { mEvt = evt; }
 
+  void setIdTruth(UShort_t index) { mIdTruth = index; }
+  void setQaTruth(UShort_t qa) { mQATruth = qa; }
+
   //getters
   Bool_t getFlag(Flag flg) const;
 
@@ -114,6 +117,9 @@ public:
 
   StUPCEvent *getEvent() const { return mEvt; }
 
+  UShort_t getIdTruth() const { return mIdTruth; }
+  UShort_t getQaTruth() const { return mQATruth; }
+
 private:
 
   StUPCTrack(const StUPCTrack &o); //not implemented
@@ -158,12 +164,14 @@ private:
 
   StUPCEvent *mEvt; //! pointer to current event, local use only
 
+  UShort_t mIdTruth; //MC track id.
+  UShort_t mQATruth; //MC track quality
+
   ClassDef(StUPCTrack, 2)
 
 };
 
 #endif
-
 
 
 

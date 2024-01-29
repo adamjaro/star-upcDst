@@ -30,6 +30,7 @@ TClonesArray *StUPCEvent::mgMCParticles = 0;
 //_____________________________________________________________________________
 StUPCEvent::StUPCEvent():
   mRunNum(0), mEvtNum(0), mFillNum(0), mbCrossId(0), mbCrossId7bit(0),
+  mBeamXPosition(0), mBeamXSlope(0), mBeamYPosition(0), mBeamYSlope(0),   
   mMagField(0), mZdcEastRate(0), mZdcWestRate(0), mZdcCoincRate(0),
   mLastDSM0(0), mLastDSM1(0), mLastDSM3(0),
   mZdcEastUA(0), mZdcWestUA(0), mZdcEastTDC(0), mZdcWestTDC(0),

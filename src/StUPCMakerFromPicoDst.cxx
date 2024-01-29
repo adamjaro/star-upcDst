@@ -126,11 +126,20 @@ Int_t StUPCMakerFromPicoDst::Make() {
   // beam line parametrs have to be set before v0 selection
   mUPCEvent->setRunNumber( mPicoDst->event()->runId() );
   mUPCEvent->setEventNumber( mPicoDst->event()->eventId() );
+  mUPCEvent->setBunchCrossId( mPicoDst->event()->bunchId() ); // set bunch Id for the merger
+
   readBeamLine();
 
+  TVector3 vertex(0,0,0); // set vertex?
+  double beamline[4]; 
+  beamline[0] = mUPCEvent->getBeamXPosition();
+  beamline[1] = mUPCEvent->getBeamXSlope();
+  beamline[2] = mUPCEvent->getBeamYPosition();
+  beamline[3] = mUPCEvent->getBeamYSlope();
+
   //select tracks from V0 candidates
-  //int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mPicoDst);
-  int nsel = mSelectCEP->selectTracks(mPicoDst, trackFilter);
+  int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mPicoDst, vertex, beamline);
+  nsel = mSelectCEP->selectTracks(mPicoDst, trackFilter);
   
   //other selections for J/psi and CEP to go here
 

@@ -24,7 +24,7 @@ StUPCTrack::StUPCTrack(): TObject(),
   mDcaXY(0), mDcaZ(0), mCharge(0), mNhits(0), mNhitsFit(0), mChi2(0),
   mNhitsDEdx(0), mDEdxSignal(0),
   mBemcPt(-999), mBemcEta(-999), mBemcPhi(-999), mBemcClsId(0), mBemcHitE(-999),
-  mTofTime(0), mTofPathLength(0), mVtxId(0), mEvt(0x0)
+  mTofTime(0), mTofPathLength(0), mVtxId(0), mEvt(0x0), mIdTruth(0), mQATruth(0)
 {
   //default constructor
 

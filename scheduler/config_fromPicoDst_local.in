@@ -9,7 +9,7 @@ add_input test_picodst /star/u/jaroslav/star-upcDst/scheduler/test_picodst_local
 
 submit local
 
-outfile out.root
+outfile cep+v0.root
 
 outdir out
 
