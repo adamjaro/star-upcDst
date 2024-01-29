@@ -20,10 +20,15 @@
 #include "StPicoEvent/StPicoTrack.h"
 #include "StPicoEvent/StPicoBEmcPidTraits.h"
 #include "StEmcUtil/geometry/StEmcGeom.h"
+#include "StPicoEvent/StPicoBTofPidTraits.h"
+#include "St_db_Maker/St_db_Maker.h"
+#include "tables/St_vertexSeed_Table.h"
+#include "tables/St_vertexSeedTriggers_Table.h"
 
 //upcDst
 #include "StUPCEvent.h"
 #include "StUPCSelectV0.h"
+#include "StUPCSelectCEP.h"
 #include "StUPCTrack.h"
 #include "StUPCBemcCluster.h"
 
@@ -38,7 +43,7 @@ using namespace std;
 StUPCMakerFromPicoDst::StUPCMakerFromPicoDst(StPicoDstMaker *pm, string outnam) : StMaker("StReadPico"),
   mPicoDstMaker(pm), mPicoDst(0x0), mOutName(outnam), mOutFile(0x0),
   mHistList(0x0), mCounter(0x0), mUPCEvent(0x0), mUPCTree(0x0),
-  mSelectV0(0x0) {
+  mSelectV0(0x0), mSelectCEP(0x0), mDbMk(0x0) {
 
   LOG_INFO << "StUPCMakerFromPicoDst::StUPCMakerFromPicoDst called" << endm;
 
@@ -70,6 +75,12 @@ Int_t StUPCMakerFromPicoDst::Init() {
 
   //selector for tracks from V0
   mSelectV0 = new StUPCSelectV0();
+  mSelectCEP = new StUPCSelectCEP();
+
+  //init database to read beam-line parameters
+  mDbMk = new St_db_Maker("db", "MySQL:StarDb", "$STAR/StarDb");
+  //mDbMk->SetDebug();
+  mDbMk->Init();
 
   //geometry for BEMC
   mBemcGeom = StEmcGeom::getEmcGeom("bemc");
@@ -93,7 +104,7 @@ Int_t StUPCMakerFromPicoDst::Make() {
   UInt_t nTracks = mPicoDst->numberOfTracks();
 
   //flag to filter picoDst tracks for writing to upcDst output
-  vector<bool> trackFilter(nTracks);
+  vector<UChar_t> trackFilter(nTracks);
 
   //UPC tracks for filtering
   vector<StUPCTrack> upcTracks(nTracks);
@@ -102,7 +113,7 @@ Int_t StUPCMakerFromPicoDst::Make() {
   for(UInt_t itrk=0; itrk<nTracks; itrk++) {
 
     //initialize the flags with false (true is to write the track to the output)
-    trackFilter[itrk] = false;
+    trackFilter[itrk] = 0;
 
     //set the UPC tracks from picoDst tracks
     setUpcTrackFromPicoTrack(&upcTracks[itrk], mPicoDst->track(itrk));
@@ -111,9 +122,16 @@ Int_t StUPCMakerFromPicoDst::Make() {
 
   //cout << "Tracks: " << nTracks << " " << trackFilter.size() << endl;
 
-  //select tracks from V0 candidates
-  int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mPicoDst);
+  //run number and event number
+  // beam line parametrs have to be set before v0 selection
+  mUPCEvent->setRunNumber( mPicoDst->event()->runId() );
+  mUPCEvent->setEventNumber( mPicoDst->event()->eventId() );
+  readBeamLine();
 
+  //select tracks from V0 candidates
+  //int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mPicoDst);
+  int nsel = mSelectCEP->selectTracks(mPicoDst, trackFilter);
+  
   //other selections for J/psi and CEP to go here
 
   //cout << "nsel: " << nsel << endl;
@@ -135,12 +153,12 @@ Int_t StUPCMakerFromPicoDst::Make() {
 
     //set the upc track from the current pico track
     setUpcTrackFromPicoTrack(upcTrack, mPicoDst->track(itrk), true);
-
+    // set flags from preselection
+    if( trackFilter[itrk] & (1 << StUPCTrack::kV0) ) 
+      upcTrack->setFlag( StUPCTrack::kV0 );
+    if( trackFilter[itrk] & (1 << StUPCTrack::kCEP) ) 
+      upcTrack->setFlag( StUPCTrack::kCEP );
   }//tracks loop
-
-  //run number and event number
-  mUPCEvent->setRunNumber( mPicoDst->event()->runId() );
-  mUPCEvent->setEventNumber( mPicoDst->event()->eventId() );
 
   //magnetic field
   mUPCEvent->setMagneticField(mPicoDst->event()->bField());
@@ -198,8 +216,16 @@ void StUPCMakerFromPicoDst::setUpcTrackFromPicoTrack(StUPCTrack *utrk, StPicoTra
   utrk->setNSigmasTPC( StUPCTrack::kProton, ptrk->nSigmaProton() );
 
   //TOF
-  if( ptrk->isTofTrack() ) utrk->setFlag( StUPCTrack::kTof );
+  if( ptrk->isTofTrack() ) 
+  {
+    utrk->setFlag( StUPCTrack::kTof );
 
+    StPicoBTofPidTraits* bTof = mPicoDst->btofPidTraits( ptrk->bTofPidTraitsIndex() );
+    utrk->setTofTime( bTof->btof() );
+    utrk->setTofPathLength( calculateTofPathLength(ptrk->origin(), bTof->btofHitPos(), ptrk->helix(bField).curvature()) );
+    // DEBUG
+    //LOG_INFO << "PathLength: "<< utrk->getTofPathLength() << endm;
+  }
   //write the BEMC only when requested
   if( !writeBemc ) return;
 
@@ -236,13 +262,67 @@ void StUPCMakerFromPicoDst::setUpcTrackFromPicoTrack(StUPCTrack *utrk, StPicoTra
 
     }
   }
-
-
-
 }//setUpcTrackFromPicoTrack
 
+//_____________________________________________________________________________
+void StUPCMakerFromPicoDst::readBeamLine() {
 
+  //mDbMk->SetDateTime(20170305,0); // event or run start time, set to your liking
+  //mDbMk->SetFlavor("ofl");
 
+  mDbMk->InitRun(mUPCEvent->getRunNumber());
+  mDbMk->Make();
+
+  TDataSet *DB = 0;
+  DB = mDbMk->GetDataBase("Calibrations/rhic/vertexSeed");
+  if (!DB) {
+    LOG_INFO << "StUPCMakerFromPicoDst::readBeamLine: no table found in db, or malformed local db config" << endm;
+    return;
+  }
+
+  St_vertexSeed *dataset = (St_vertexSeed*) DB->Find("vertexSeed");
+
+  if (!dataset) {
+    LOG_INFO << "StUPCMakerFromPicoDst::readBeamLine: dataset does not contain requested table" << endm;
+    return;
+  } 
+
+  Int_t rows = dataset->GetNRows();
+  if (rows != 1) {
+    LOG_INFO << "StUPCMakerFromPicoDst::readBeamLine:: found INDEXED table with inconsistent number of rows = " << rows << endm;
+    if( rows == 0)
+      return;
+  }
+
+  //TDatime val[2];
+  //mDbMk->GetValidity((TTable*)dataset,val);
+  //LOG_INFO << "Dataset validity range: [ " << val[0].GetDate() << "." << val[0].GetTime() << " - " << val[1].GetDate() << "." << val[1].GetTime() << " ] "<< endm;
+
+  vertexSeed_st *table = dataset->GetTable();
+  mUPCEvent->setBeamXPosition( table[0].x0 );
+  mUPCEvent->setBeamXSlope( table[0].dxdz );
+  mUPCEvent->setBeamYPosition( table[0].y0 );
+  mUPCEvent->setBeamYSlope( table[0].dydz );
+}//readBeamLine
+
+//_____________________________________________________________________________
+double StUPCMakerFromPicoDst::calculateTofPathLength(const TVector3 beginPoint, const TVector3 endPoint, const double curvature) {
+
+  double xdif =  endPoint.x() - beginPoint.x();
+  double ydif =  endPoint.y() - beginPoint.y();
+  
+  double C = sqrt(xdif*xdif + ydif*ydif);
+  double s_perp = C;
+  if (curvature){
+    double R = 1/curvature;
+    s_perp = 2*R * asin(C/(2*R));
+  }
+
+  double s_z = fabs(endPoint.z() - beginPoint.z());
+  double value = sqrt(s_perp*s_perp + s_z*s_z);
+
+  return value;
+}//calculateTofPathLength
 
 
 

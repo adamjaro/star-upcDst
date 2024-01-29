@@ -15,7 +15,7 @@
 using namespace std;
 
 //_____________________________________________________________________________
-int StUPCSelectV0::selectTracks(vector<StUPCTrack>& tracks, std::vector<bool>& sel, StPicoDst *pd) {
+int StUPCSelectV0::selectTracks(vector<StUPCTrack>& tracks, std::vector<UChar_t>& sel, StPicoDst *pd) {
 
   //cout << "StUPCSelectV0::selectTracks" << endl;
   //cout << "field: " << pd->event()->bField() << endl;
@@ -26,8 +26,13 @@ int StUPCSelectV0::selectTracks(vector<StUPCTrack>& tracks, std::vector<bool>& s
   double massProton = 0.93827;  
 
   TVector3 vertex(0,0,0);
-  double beamline[4] = {0, 0, 0, 0}; // have to be loaded from star database and ideally store in StUpcEvent in the end
-  //std::vector<int> globalList;
+  double beamline[4] = {0, 0, 0, 0}; 
+  // beamline[0] = mUPCEvent->getBeamXPosition();
+  // beamline[1] = mUPCEvent->getBeamXSlope();
+  // beamline[2] = mUPCEvent->getBeamYPosition();
+  // beamline[3] = mUPCEvent->getBeamYSlope();
+  // add beamline as parameter or read it directly from mUPCEvent?
+  // what about vertex?
 
   int nfound = 0;
 
@@ -92,9 +97,8 @@ int StUPCSelectV0::selectTracks(vector<StUPCTrack>& tracks, std::vector<bool>& s
       nfound++;
 
       //mark the tracks as used
-      sel[itrk] = true;
-      sel[jtrk] = true;
-
+      sel[itrk] |= (1 << StUPCTrack::kV0);
+      sel[jtrk] |= (1 << StUPCTrack::kV0);
     }//inner tracks loop
   }//outer tracks loop
 

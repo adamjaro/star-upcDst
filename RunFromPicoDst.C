@@ -15,6 +15,20 @@ void RunFromPicoDst(string filelist, Int_t nFiles, string outfile, string config
   gSystem->Load("StPicoEvent");
   gSystem->Load("StPicoDstMaker");
 
+  // load libraries to read beam-line position
+  // base libraries
+  gSystem->Load("St_base");
+  gSystem->Load("StChain");
+  gSystem->Load("StUtilities");
+  gSystem->Load("StIOMaker");
+  gSystem->Load("StarClassLibrary");
+
+  // db-related libraries
+  gSystem->Load("St_Tables");
+  gSystem->Load("StDbLib");
+  gSystem->Load("StDbBroker");
+  gSystem->Load("St_db_Maker");
+
   //load the analysis maker compiled before with cons
   gSystem->Load("StUPCFilterMaker.so");
 

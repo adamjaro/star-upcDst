@@ -3,7 +3,7 @@
 
 macro RunFromPicoDst.C
 
-top /star/u/jaroslav/test/picodst_read/prod
+top /star/u/truhlar/picoDstReader/test/star-upcDst/test
 
 add_input test_picodst /star/u/jaroslav/star-upcDst/scheduler/test_picodst_local.list
 

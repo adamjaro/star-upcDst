@@ -35,6 +35,11 @@ public:
   void setBunchCrossId7bit(UInt_t id) { mbCrossId7bit = id; }
   void setMagneticField(Double_t mag) { mMagField = mag; }
 
+  void setBeamXPosition(Double_t beamParam) { mBeamXPosition = beamParam; }
+  void setBeamXSlope(Double_t beamParam) { mBeamXSlope = beamParam; }
+  void setBeamYPosition(Double_t beamParam) { mBeamYPosition = beamParam; }
+  void setBeamYSlope(Double_t beamParam) { mBeamYSlope = beamParam; }
+
   void setZDCEastRate(Double_t rate) { mZdcEastRate = rate; }
   void setZDCWestRate(Double_t rate) { mZdcWestRate = rate; }
   void setZDCCoincRate(Double_t rate) { mZdcCoincRate = rate; }
@@ -90,6 +95,11 @@ public:
   UInt_t getBunchCrossId() const { return mbCrossId; }
   UInt_t getBunchCrossId7bit() const { return mbCrossId7bit; }
   Double_t getMagneticField() const { return mMagField; }
+
+  Double_t getBeamXPosition() const { return mBeamXPosition; }
+  Double_t getBeamXSlope() const { return mBeamXSlope; }
+  Double_t getBeamYPosition() const { return mBeamYPosition; }
+  Double_t getBeamYSlope() const { return mBeamYSlope; }
 
   Double_t getZDCEastRate() const { return mZdcEastRate; }
   Double_t getZDCWestRate() const { return mZdcWestRate; }
@@ -161,6 +171,12 @@ private:
   UInt_t mbCrossId7bit; // bunch crossing ID 7bit
   Double32_t mMagField; // magnetic field
 
+  // beam line param
+  Double32_t mBeamXPosition; // table[i].x0 
+  Double32_t mBeamXSlope; // table[i].dxdz 
+  Double32_t mBeamYPosition; // table[i].y0 
+  Double32_t mBeamYSlope; // table[i].dydz
+  
   Double32_t mZdcEastRate; // ZDC rate, east
   Double32_t mZdcWestRate; // ZDC rate, west
   Double32_t mZdcCoincRate; // ZDC rate, east&&west coincidence
