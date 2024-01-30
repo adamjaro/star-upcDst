@@ -167,7 +167,7 @@ private:
   UShort_t mIdTruth; //MC track id.
   UShort_t mQATruth; //MC track quality
 
-  ClassDef(StUPCTrack, 2)
+  ClassDef(StUPCTrack, 3)
 
 };
 
