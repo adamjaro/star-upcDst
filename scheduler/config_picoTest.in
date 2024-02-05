@@ -1,0 +1,23 @@
+#example configuration for reading picoDst
+
+macro RunFromPicoDst.C
+
+top /gpfs01/star/pwg/truhlar/run17PicoOut/test
+
+
+add_input 18054010 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18054010.list
+add_input 18055040 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18055040.list
+add_input 18080030 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18080030.list
+add_input 18080031 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18080031.list
+add_input 18090061 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18090061.list
+add_input 18125028 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18125028.list
+add_input 18141010 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18141010.list
+add_input 18149029 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18149029.list
+add_input 18149030 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18149030.list
+add_input 18149038 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18149038.list
+
+#submit local
+
+outfile StUPCRP_production.root
+
+outdir merge_files

@@ -59,8 +59,6 @@ class StUPCV0 : public TObject
   float particle1Dca(StPicoPhysicalHelix  p1Helix, TVector3 const & vtx2, float bField) const;
   float particle2Dca() const;
   float particle2Dca(StPicoPhysicalHelix  p1Helix, TVector3 const & vtx2, float bField) const;
-  unsigned short particle1Idx() const;
-  unsigned short particle2Idx() const;
   float dcaDaughters() const;
   float cosThetaStar() const;
   float thetaProdPlane() const;
@@ -92,9 +90,6 @@ class StUPCV0 : public TObject
   float mParticle2Dca;
   float mDcaToPrimaryVertex;
 
-  unsigned short  mParticle1Idx; // index of track in StUPCDstEvent 
-  unsigned short  mParticle2Idx; // index of track in StUPCDstEvent for particle, idx in tertiary vertex array for pair 
-
   float mDcaDaughters;
   float mCosThetaStar;
   float mThetaProdPlane; //anlgle between momentum of particle1 and mProdPlane vector in mother rest frame
@@ -119,8 +114,6 @@ inline float StUPCV0::decayLengthHypo()   const { return mDecayLengthHypo;}
 inline float StUPCV0::DCABeamLine()   const { return mDCABeamLine;}
 inline float StUPCV0::particle1Dca()  const { return mParticle1Dca;}
 inline float StUPCV0::particle2Dca()  const { return mParticle2Dca;}
-inline unsigned short StUPCV0::particle1Idx() const { return mParticle1Idx;}
-inline unsigned short StUPCV0::particle2Idx() const { return mParticle2Idx;}
 inline float StUPCV0::dcaDaughters() const { return mDcaDaughters;}
 inline float StUPCV0::cosThetaStar() const { return mCosThetaStar;}
 inline float StUPCV0::thetaProdPlane() const { return mThetaProdPlane;}

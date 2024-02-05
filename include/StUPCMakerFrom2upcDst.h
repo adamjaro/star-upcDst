@@ -13,7 +13,11 @@ class StUPCMakerFrom2upcDst {
   Int_t EventLoop();
   Int_t Finish();
 
+
  private:
+  //void setUpcDstEvent();
+  void fillPicoInfo();
+  void enableBranchAndSubbranches(TTree* tree, const char* branchName);
 
   TFile *mInpMain; // main input
   TFile *mInpIdx; // indexed secondary input
@@ -27,11 +31,6 @@ class StUPCMakerFrom2upcDst {
   TFile *mOutFile; // output file
   TTree *mTreeOut; // output UPC tree
   StUPCEvent *mEvtOut; // output UPC event
-
-  TList *mHistList; // list of output histograms
-
-  TH1I *mCounter; // analysis counter
-  enum EvtCount{ kAna=1, kWritten, kMaxCnt };
 
   ClassDef(StUPCMakerFrom2upcDst, 1);
 

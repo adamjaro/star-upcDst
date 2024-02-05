@@ -1,3 +1,5 @@
+test/
+run.sh
 build/
 StRoot/
 .sl73_gcc485/

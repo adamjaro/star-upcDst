@@ -12,47 +12,46 @@ using namespace std;
 
 ClassImp(StUPCV0)
 
+
+
+
 // _________________________________________________________
-StUPCV0::StUPCV0(): mLorentzVector(TLorentzVector()), mDecayVertex(TVector3()),
-  mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
-  mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
-  mParticle1Idx(std::numeric_limits<unsigned short>::max()), mParticle2Idx(std::numeric_limits<unsigned short>::max()),
-  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()),
-  mThetaProdPlane(std::numeric_limits<float>::quiet_NaN()), mProdPlane(TVector3()) {
+StUPCV0::StUPCV0(): mLorentzVector(TLorentzVector()), mDecayVertex(TVector3()), mProdPlane(TVector3()), 
+  mDCABeamLine(std::numeric_limits<float>::quiet_NaN()), mProdVertexHypo(TVector3()), 
+  mPointingAngleHypo(std::numeric_limits<float>::quiet_NaN()), mDecayLengthHypo(std::numeric_limits<float>::quiet_NaN()), 
+  mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()), 
+  mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()), 
+  mDcaToPrimaryVertex(std::numeric_limits<float>::quiet_NaN()), mDcaDaughters(std::numeric_limits<float>::max()), 
+  mCosThetaStar(std::numeric_limits<float>::quiet_NaN()), mThetaProdPlane(std::numeric_limits<float>::quiet_NaN()) , 
+  mAlphaAP(std::numeric_limits<float>::quiet_NaN()), mPtAP(std::numeric_limits<float>::quiet_NaN()) {
 }
 
 // _________________________________________________________
-StUPCV0::StUPCV0(StUPCV0 const * t) : mLorentzVector(t->mLorentzVector), mDecayVertex(t->mDecayVertex),
-   mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength),
-   mParticle1Dca(t->mParticle1Dca), mParticle2Dca(t->mParticle2Dca),
-   mParticle1Idx(t->mParticle1Idx), mParticle2Idx(t->mParticle2Idx),
-   mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar),
-   mThetaProdPlane(t->mThetaProdPlane), mProdPlane(t->mProdPlane) {
+StUPCV0::StUPCV0(StUPCV0 const * t) : mLorentzVector(t->mLorentzVector), mDecayVertex(t->mDecayVertex), mProdPlane(t->mProdPlane), 
+  mDCABeamLine(t->mDCABeamLine), mProdVertexHypo(TVector3()), mPointingAngleHypo(t->mPointingAngleHypo), mDecayLengthHypo(t->mDecayLengthHypo), 
+  mPointingAngle(t->mPointingAngle), mDecayLength(t->mDecayLength), mParticle1Dca(t->mParticle1Dca), mParticle2Dca(t->mParticle2Dca), 
+  mDcaToPrimaryVertex(t->mDcaToPrimaryVertex), mDcaDaughters(t->mDcaDaughters), mCosThetaStar(t->mCosThetaStar), 
+  mThetaProdPlane(t->mThetaProdPlane), mAlphaAP(t->mAlphaAP), mPtAP(t->mPtAP){
 }
 
 // _________________________________________________________
 StUPCV0::StUPCV0(StUPCTrack const * const particle1, StUPCTrack const * const particle2,
 		   float p1MassHypo, float p2MassHypo, unsigned short const p1Idx, unsigned short const p2Idx,
 		   TVector3 const & vtx, double * beamLine, float const bField, bool const useStraightLine) : 
-  mLorentzVector(TLorentzVector()), mDecayVertex(TVector3()),
-  mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()),
-  mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()),
-  mParticle1Idx(p1Idx), mParticle2Idx(p2Idx),
-  mDcaDaughters(std::numeric_limits<float>::max()), mCosThetaStar(std::numeric_limits<float>::quiet_NaN()) {
+  mLorentzVector(TLorentzVector()), mDecayVertex(TVector3()), mProdPlane(TVector3()), 
+  mDCABeamLine(std::numeric_limits<float>::quiet_NaN()), mProdVertexHypo(TVector3()), 
+  mPointingAngleHypo(std::numeric_limits<float>::quiet_NaN()), mDecayLengthHypo(std::numeric_limits<float>::quiet_NaN()), 
+  mPointingAngle(std::numeric_limits<float>::quiet_NaN()), mDecayLength(std::numeric_limits<float>::quiet_NaN()), 
+  mParticle1Dca(std::numeric_limits<float>::quiet_NaN()), mParticle2Dca(std::numeric_limits<float>::quiet_NaN()), 
+  mDcaToPrimaryVertex(std::numeric_limits<float>::quiet_NaN()), mDcaDaughters(std::numeric_limits<float>::max()), 
+  mCosThetaStar(std::numeric_limits<float>::quiet_NaN()), mThetaProdPlane(std::numeric_limits<float>::quiet_NaN()) , 
+  mAlphaAP(std::numeric_limits<float>::quiet_NaN()), mPtAP(std::numeric_limits<float>::quiet_NaN()){
   // -- Create pair out of 2 tracks
   //     prefixes code:
   //      p1 means particle 1
   //      p2 means particle 2
   //      pair means particle1-particle2  pair
 
-// StUPCTrack do not have id() method :: to do  
-/*
-  if ((!particle1 || !particle2) || (particle1->id() == particle2->id())) {
-    mParticle1Idx = std::numeric_limits<unsigned short>::max();
-    mParticle2Idx = std::numeric_limits<unsigned short>::max();
-    return;
-  }
-*/
 
 // StUPCTrack do not have helix() method :: to do
 /*
@@ -71,8 +70,8 @@ StUPCV0::StUPCV0(StUPCTrack const * const particle1, StUPCTrack const * const pa
                                                      particle2->getPhase(), 
                                                      particle2->getOrigin(),
                                                      particle2->getCharge());
-  p1Helix.moveOrigin(p1Helix.pathLength(vtx,false));
-  p2Helix.moveOrigin(p2Helix.pathLength(vtx,false));
+  p1Helix.moveOrigin(p1Helix.pathLength(vtx));
+  p2Helix.moveOrigin(p2Helix.pathLength(vtx));
 
 // -- use straight lines approximation to get point of DCA of particle1-particle2 pair
 // bField is in kilogauss

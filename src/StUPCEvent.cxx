@@ -29,9 +29,9 @@ TClonesArray *StUPCEvent::mgMCParticles = 0;
 
 //_____________________________________________________________________________
 StUPCEvent::StUPCEvent():
-  mRunNum(0), mEvtNum(0), mFillNum(0), mbCrossId(0), mbCrossId7bit(0),
+  mRunNum(0), mEvtNum(0), mFillNum(0), mbCrossId(0), mbCrossId7bit(0), mMagField(0),
   mBeamXPosition(0), mBeamXSlope(0), mBeamYPosition(0), mBeamYSlope(0),   
-  mMagField(0), mZdcEastRate(0), mZdcWestRate(0), mZdcCoincRate(0),
+  mZdcEastRate(0), mZdcWestRate(0), mZdcCoincRate(0),
   mLastDSM0(0), mLastDSM1(0), mLastDSM3(0),
   mZdcEastUA(0), mZdcWestUA(0), mZdcEastTDC(0), mZdcWestTDC(0),
   mZdcTimeDiff(0), mZdcVertexZ(0),
@@ -423,8 +423,168 @@ TParticle *StUPCEvent::getMCParticle(Int_t iMC) const
 }//getMCParticle
 
 
+//_____________________________________________________________________________
+StUPCEvent &StUPCEvent::operator=(const StUPCEvent &o)
+{
+  if (this == &o)
+      return *this; //self assignment
 
+  clearEvent();
 
+  for( Int_t i = 0; i < o.getTriggerArraySize(); i++)
+    addTriggerId( o.getTriggerID(i) );
+
+  setRunNumber( o.getRunNumber() );
+  setEventNumber( o.getEventNumber() );
+  setFillNumber( o.getFillNumber() );
+  setBunchCrossId( o.getBunchCrossId() );
+  setBunchCrossId7bit( o.getBunchCrossId7bit() );
+  setMagneticField( o.getMagneticField() );  
+  setZDCEastRate( o.getZDCEastRate() );
+  setZDCWestRate( o.getZDCWestRate() );
+  setZDCCoincRate( o.getZDCCoincRate() );
+  setLastDSM0( o.getLastDSM0() );
+  setLastDSM1( o.getLastDSM1() );
+  setLastDSM3( o.getLastDSM3() );
+  setZDCUnAttEast( o.getZDCUnAttEast() );
+  setZDCUnAttWest( o.getZDCUnAttWest() );
+  for (Int_t ipmt=1; ipmt<=3; ipmt++) {
+    setZDCEastADC( o.getZDCEastADC(ipmt), ipmt );
+    setZDCWestADC( o.getZDCWestADC(ipmt), ipmt );
+  }
+  setZDCEastTDC( o.getZDCEastTDC() );
+  setZDCWestTDC( o.getZDCWestTDC() );
+  setZDCTimeDiff( o.getZDCTimeDiff() );
+  setZdcVertexZ( o.getZdcVertexZ() );
+  //ZDC SMD
+  //vertical - horizontal loop
+  for(Int_t verthori=0; verthori<2; verthori++) {
+    //strip loop
+    for(Int_t strip=1; strip<9; strip++) {
+      setZdcSMDEast( verthori, strip,  o.getZdcSMDEast(verthori, strip) );
+      setZdcSMDWest( verthori, strip,  o.getZdcSMDWest(verthori, strip) );
+    }//strip loop
+  }//vertical - horizontal loop
+
+  setBBCSmallEast( o.getBBCSmallEast() );
+  setBBCSmallWest( o.getBBCSmallWest() );
+  setBBCLargeEast( o.getBBCLargeEast() );
+  setBBCLargeWest( o.getBBCLargeWest() );
+
+  setVPDSumEast( o.getVPDSumEast() );
+  setVPDSumWest( o.getVPDSumWest() );
+  setVPDTimeDiff( o.getVPDTimeDiff() );
+
+  setTOFMultiplicity( o.getTOFMultiplicity() );
+  setBEMCMultiplicity( o.getBEMCMultiplicity() );
+
+  setNGlobTracks( o.getNGlobTracks() );
+  setNPrimTracks( o.getNPrimTracks() );
+  setNPrimVertices( o.getNPrimVertices() );
+
+  // Add tracks, tracks loop
+  for(Int_t itrk=0; itrk< o.getNumberOfTracks(); itrk++) {
+    StUPCTrack *track = o.getTrack(itrk);
+    if( !track ) continue;
+
+    //UPC track
+    StUPCTrack *upcTrack = addTrack();
+    upcTrack->setPtEtaPhi(track->getPt(), track->getEta(), track->getPhi());
+    upcTrack->setCurvatureDipAnglePhase(track->getCurvature(), track->getDipAngle(), track->getPhase() );
+    upcTrack->setOrigin( track->getOrigin() );
+    upcTrack->setDcaXY( track->getDcaXY() );
+    upcTrack->setDcaZ( track->getDcaZ() );
+    upcTrack->setCharge( track->getCharge() );
+    upcTrack->setNhits( track->getNhits() );
+    upcTrack->setNhitsFit( track->getNhitsFit() );
+    upcTrack->setChi2( track->getChi2() );
+    upcTrack->setNhitsDEdx( track->getNhitsDEdx() );
+    upcTrack->setDEdxSignal( track->getDEdxSignal() );
+    upcTrack->setNSigmasTPC( StUPCTrack::kElectron, track->getNSigmasTPCElectron() );
+    upcTrack->setNSigmasTPC( StUPCTrack::kPion, track->getNSigmasTPCPion() );
+    upcTrack->setNSigmasTPC( StUPCTrack::kKaon, track->getNSigmasTPCKaon() );
+    upcTrack->setNSigmasTPC( StUPCTrack::kProton, track->getNSigmasTPCProton() );
+    upcTrack->setVertexId( track->getVertexId() );
+    if( track->getFlag(StUPCTrack::kPrimary) )
+      upcTrack->setFlag( StUPCTrack::kPrimary );
+    if( track->getFlag(StUPCTrack::kBemcProj) ) {
+      upcTrack->setFlag( StUPCTrack::kBemcProj );
+      upcTrack->setBemcPtEtaPhi(track->getBemcPt(), track->getBemcEta(), track->getBemcPhi());
+    }
+    if( track->getFlag(StUPCTrack::kBemc) ) {
+      upcTrack->setFlag( StUPCTrack::kBemc );
+      upcTrack->setBemcPtEtaPhi(track->getBemcPt(), track->getBemcEta(), track->getBemcPhi());
+      upcTrack->setBemcClusterId(track->getBemcClusterId());
+      upcTrack->setBemcHitE(track->getBemcHitE());
+    }
+    if( track->getFlag(StUPCTrack::kTof) ) {
+      upcTrack->setFlag( StUPCTrack::kTof );
+      upcTrack->setTofTime( track->getTofTime() );
+      upcTrack->setTofPathLength( track->getTofPathLength() );
+    }
+    if( track->getFlag(StUPCTrack::kV0) )
+      upcTrack->setFlag( StUPCTrack::kV0 );
+    if( track->getFlag(StUPCTrack::kCEP) )
+      upcTrack->setFlag( StUPCTrack::kCEP );
+  }//tracks loop
+
+  // Add BEMC clusters, clusters vector loop
+  for(int iClstr=0; iClstr < o.getNumberOfClusters(); iClstr++) {
+    StUPCBemcCluster *cluster = o.getCluster(iClstr);
+    if( !cluster ) continue;
+
+    //put cluster in clones array in UPC event
+    StUPCBemcCluster *upcCls = addCluster();
+    upcCls->setEta( cluster->getEta() );
+    upcCls->setPhi( cluster->getPhi() );
+    upcCls->setSigmaEta( cluster->getSigmaEta() );
+    upcCls->setSigmaPhi( cluster->getSigmaPhi() );
+    upcCls->setEnergy( cluster->getEnergy() );
+    upcCls->setHTEnergy( cluster->getHTEnergy() );
+    upcCls->setHTsoftID( cluster->getHTsoftID() );
+    //cluster ID as position of cluster in clusters vector
+    upcCls->setId( cluster->getId() );
+
+  }//clusters vector loop
+
+  // Add TOF hits, TOF hit loop
+  for(int ihit=0; ihit < o.getNumberOfHits(); ihit++) {
+    // get hit from main upcDst
+    StUPCTofHit *tofhit = o.getHit( ihit );
+    if( !tofhit ) continue;
+
+    //put hit in clones array in UPC event
+    StUPCTofHit *upcHit = addHit();
+    upcHit->setTray( tofhit->getTray() );
+    upcHit->setModule( tofhit->getModule() );
+    upcHit->setCell( tofhit->getCell() );
+    upcHit->setLeadingEdgeTime( tofhit->getLeadingEdgeTime() );
+    upcHit->setTrailingEdgeTime( tofhit->getTrailingEdgeTime() );
+  }
+
+  // Add vertecies
+  for (int iVrtx = 0; iVrtx < o.getNumberOfVertices(); ++iVrtx) {
+    StUPCVertex *mainVertex = o.getVertex( iVrtx );
+    if( !mainVertex ) continue;
+
+    //write vertex to output UPC event
+    StUPCVertex *upcVtx = addVertex();
+    upcVtx->setPosX( mainVertex->getPosX() );
+    upcVtx->setPosY( mainVertex->getPosY() );
+    upcVtx->setPosZ( mainVertex->getPosZ() );
+    upcVtx->setErrX( mainVertex->getErrX() );
+    upcVtx->setErrY( mainVertex->getErrY() );
+    upcVtx->setErrZ( mainVertex->getErrZ() );
+    upcVtx->setNPrimaryTracks( mainVertex->getNPrimaryTracks() );
+    upcVtx->setNTracksUsed( mainVertex->getNTracksUsed() );
+    upcVtx->setId( mainVertex->getId() );
+  }//vertex loop
+
+  // Add MC info
+  setIsMC( o.getIsMC() );  
+
+  return *this;
+}//operator=(
 
 
 

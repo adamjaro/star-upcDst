@@ -108,27 +108,3 @@ if __name__ == "__main__":
     os.remove(tmpnam)
 
     print "All done."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

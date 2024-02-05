@@ -42,8 +42,8 @@ using namespace std;
 //_____________________________________________________________________________
 StUPCMakerFromPicoDst::StUPCMakerFromPicoDst(StPicoDstMaker *pm, string outnam) : StMaker("StReadPico"),
   mPicoDstMaker(pm), mPicoDst(0x0), mOutName(outnam), mOutFile(0x0),
-  mHistList(0x0), mCounter(0x0), mUPCEvent(0x0), mUPCTree(0x0),
-  mSelectV0(0x0), mSelectCEP(0x0), mDbMk(0x0) {
+  mHistList(0x0), mCounter(0x0), mUPCEvent(0x0), mUPCTree(0x0), mDbMk(0x0),
+  mSelectV0(0x0), mSelectCEP(0x0) {
 
   LOG_INFO << "StUPCMakerFromPicoDst::StUPCMakerFromPicoDst called" << endm;
 
@@ -130,16 +130,13 @@ Int_t StUPCMakerFromPicoDst::Make() {
 
   readBeamLine();
 
-  TVector3 vertex(0,0,0); // set vertex?
-  double beamline[4]; 
-  beamline[0] = mUPCEvent->getBeamXPosition();
-  beamline[1] = mUPCEvent->getBeamXSlope();
-  beamline[2] = mUPCEvent->getBeamYPosition();
-  beamline[3] = mUPCEvent->getBeamYSlope();
+  //magnetic field
+  mUPCEvent->setMagneticField(mPicoDst->event()->bField());
 
   //select tracks from V0 candidates
-  int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mPicoDst, vertex, beamline);
-  nsel = mSelectCEP->selectTracks(mPicoDst, trackFilter);
+  TVector3 vertex = mPicoDst->event()->primaryVertex();
+  //int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mUPCEvent, vertex);
+  int nsel = mSelectCEP->selectTracks(mPicoDst, trackFilter);
   
   //other selections for J/psi and CEP to go here
 
@@ -169,8 +166,6 @@ Int_t StUPCMakerFromPicoDst::Make() {
       upcTrack->setFlag( StUPCTrack::kCEP );
   }//tracks loop
 
-  //magnetic field
-  mUPCEvent->setMagneticField(mPicoDst->event()->bField());
 
   mCounter->Fill( kWritten ); // events with written upcDst output
 

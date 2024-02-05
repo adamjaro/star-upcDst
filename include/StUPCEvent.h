@@ -23,7 +23,8 @@ public:
 
   StUPCEvent();
   virtual ~StUPCEvent();
-
+  StUPCEvent &operator=(const StUPCEvent &o);
+  
   void clearEvent();
 
   //setters
@@ -88,6 +89,8 @@ public:
   TParticle *addMCParticle();
 
   //getters
+  Int_t getTriggerArraySize() const { return mTrgIDs.GetSize(); }
+  Int_t getTriggerID(Int_t position) const { return (position >= 0 && position < mTrgIDs.GetSize()) ? mTrgIDs.At(position) : -1; }
   Bool_t isTrigger(Int_t id) const;
   Int_t getRunNumber() const { return mRunNum; }
   Int_t getEventNumber() const { return mEvtNum; }
@@ -160,7 +163,6 @@ public:
 private:
 
   StUPCEvent(const StUPCEvent &o); //not implemented
-  StUPCEvent &operator=(const StUPCEvent &o); //not implemented
 
   TArrayI mTrgIDs; // fired trigger IDs
 

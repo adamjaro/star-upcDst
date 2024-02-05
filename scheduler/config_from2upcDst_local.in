@@ -3,9 +3,19 @@
 
 macro RunFrom2upcDst.C
 
-top /star/u/jaroslav/test/picodst_read/from2upcDst
+#top /gpfs01/star/pwg/truhlar/run17PicoOut/out
+top /star/u/truhlar/picoDstReader/test/star-upcDst/test
 
-add_input test1 /star/u/jaroslav/star-upcDst/scheduler/test_2upcDst.list
+#add_input 18054010 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18054010.list
+add_input 18055040 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18055040.list
+#add_input 18080030 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18080030.list
+#add_input 18080031 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18080031.list
+#add_input 18090061 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18090061.list
+#add_input 18125028 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18125028.list
+#add_input 18141010 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18141010.list
+#add_input 18149029 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18149029.list
+#add_input 18149030 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18149030.list
+#add_input 18149038 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18149038.list
 
 submit local
 

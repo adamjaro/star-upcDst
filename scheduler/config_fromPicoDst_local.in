@@ -5,9 +5,9 @@ macro RunFromPicoDst.C
 
 top /star/u/truhlar/picoDstReader/test/star-upcDst/test
 
-add_input test_picodst /star/u/jaroslav/star-upcDst/scheduler/test_picodst_local.list
+add_input test_dd /star/u/truhlar/picoDstReader/test/star-upcDst/utils/test.list
 
-submit local
+#submit local
 
 outfile cep+v0.root
 
