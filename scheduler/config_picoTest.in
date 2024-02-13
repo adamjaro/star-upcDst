@@ -2,7 +2,7 @@
 
 macro RunFromPicoDst.C
 
-top /gpfs01/star/pwg/truhlar/run17PicoOut/test
+top /gpfs01/star/pwg/truhlar/run17PicoOut/pico/test
 
 
 add_input 18054010 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18054010.list
@@ -21,3 +21,5 @@ add_input 18149038 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/lists/18
 outfile StUPCRP_production.root
 
 outdir merge_files
+
+suffix .pico.root

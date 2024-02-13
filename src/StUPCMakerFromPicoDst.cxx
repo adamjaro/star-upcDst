@@ -135,8 +135,8 @@ Int_t StUPCMakerFromPicoDst::Make() {
 
   //select tracks from V0 candidates
   TVector3 vertex = mPicoDst->event()->primaryVertex();
-  //int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mUPCEvent, vertex);
-  int nsel = mSelectCEP->selectTracks(mPicoDst, trackFilter);
+  int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mUPCEvent, vertex);
+  nsel += mSelectCEP->selectTracks(mPicoDst, trackFilter);
   
   //other selections for J/psi and CEP to go here
 

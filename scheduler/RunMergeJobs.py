@@ -21,13 +21,16 @@ if __name__ == "__main__":
     parser.add_parameter("top")
     parser.add_parameter("outlist")
     parser.add_parameter("add_input", list)
+    parser.add_parameter("suffix")
     parser.set_default("outlist", "outlist.list") #macro to run the maker
+    parser.set_default("suffix", ".root") #macro to run the maker
 
     parser.parse(config)
 
     top = parser.get("top")
     qlist = parser.get("add_input")
     outlist = parser.get("outlist")
+    suffix = parser.get("suffix")
 
     #output files list
     chunk_list = open(top+"/"+outlist, "w")
@@ -60,7 +63,7 @@ if __name__ == "__main__":
             if iline == len(out)-1:
                 tmp.close()
                 print "Size:", totsiz
-                chunkout = merge_path+"/"+ q[0]+".root"
+                chunkout = merge_path+"/"+ q[0]+suffix
                 merge_cmd = "root -l -b -q MergeFiles.C(\"" + tmpnam + "\",\"" + chunkout + "\")"
                 merg = Popen(merge_cmd.split(), stdout=PIPE, stderr=PIPE).communicate()
                 print merg[0], merg[1]

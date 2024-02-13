@@ -17,7 +17,7 @@ using namespace std;
 void make_pT() {
 
   //open input file
-  TFile *infile = TFile::Open("/gpfs01/star/pwg/jaroslav/star-upcDst-data/test_productions/mc/StUPC_slight14e1x1.root", "read");
+  TFile *infile = TFile::Open("/gpfs01/star/pwg/truhlar/run17PicoOut/testSample/18055040/18055040.pico.root", "read");
 
   //get picoDst tree in file
   TTree *upcTree = dynamic_cast<TTree*>( infile->Get("mUPCTree") );

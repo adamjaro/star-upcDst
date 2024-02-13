@@ -3,8 +3,7 @@
 
 macro RunFrom2upcDst.C
 
-#top /gpfs01/star/pwg/truhlar/run17PicoOut/out
-top /star/u/truhlar/picoDstReader/test/star-upcDst/test
+top /gpfs01/star/pwg/truhlar/run17PicoOut/local
 
 #add_input 18054010 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18054010.list
 add_input 18055040 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18055040.list

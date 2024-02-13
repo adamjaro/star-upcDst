@@ -1,0 +1,24 @@
+
+#example configuration for reading picoDst
+
+macro RunFrom2upcDst.C
+
+top /gpfs01/star/pwg/truhlar/run17PicoOut/upc/test
+
+add_input 18054010 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18054010.list
+add_input 18055040 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18055040.list
+add_input 18080030 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18080030.list
+add_input 18080031 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18080031.list
+add_input 18090061 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18090061.list
+add_input 18125028 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18125028.list
+add_input 18141010 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18141010.list
+add_input 18149029 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18149029.list
+add_input 18149030 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18149030.list
+add_input 18149038 /star/u/truhlar/picoDstReader/test/star-upcDst/scheduler/testList/18149038.list
+
+#submit local
+
+outfile out.root
+
+outdir out
+

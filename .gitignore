@@ -1,6 +1,7 @@
 test/
 run.sh
 build/
+work/
 StRoot/
 .sl73_gcc485/
 temp_gccflags.c

@@ -56,12 +56,14 @@ StUPCMakerFrom2upcDst::StUPCMakerFrom2upcDst(const string& in1_name, const strin
   //output file and copy the tree from main
   mOutFile = new TFile(out_name.c_str(), "recreate");
   // clone a RP info
+
   mTreeMain->SetBranchStatus("*", 0); //disable all branches
   enableBranchAndSubbranches(mTreeMain, "mRPEvent"); // set RP branch
   mTreeOut = mTreeMain->CloneTree(0);
 
   mTreeMain->SetBranchStatus("*", 1); //set on all branches back again
 
+//  mTreeOut = new TTree("mUPCTree", "mUPCTree");
   mTreeOut->Branch("mUPCEvent", &mEvtOut);
 
 }//StUPCMakerFrom2upcDst

@@ -110,6 +110,7 @@ StUPCV0::StUPCV0(StUPCTrack const * const particle1, StUPCTrack const * const pa
   mCosThetaStar = std::cos(FourMomStar.Vect().Angle(mLorentzVector.Vect()));
 
 //  TVector3 beamVector(0.,0.,1.); //unity vector along the beam axis
+  // this may be wrong
   TVector3 beamVector(beamLine[2],beamLine[3],1.); //unity vector along the beam axis with beamLine3D
 
   TVector3 mProdPlane_work = beamVector.Cross(mLorentzVector.Vect());

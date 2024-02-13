@@ -236,7 +236,7 @@ private:
   TClonesArray *mMCParticles; // array of MC particles
   Int_t mNmc; //! number of mc particles in event, local use when filling
 
-  ClassDef(StUPCEvent, 3);
+  ClassDef(StUPCEvent, 4);
 };
 
 #endif

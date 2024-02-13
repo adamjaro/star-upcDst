@@ -13,6 +13,8 @@ set (SRCS
   src/StUPCRpsTrack.cxx
   src/StUPCRpsTrackPoint.cxx
   src/StUPCRpsCluster.cxx
+  src/StPicoPhysicalHelix.cxx 
+  src/StPicoHelix.cxx 
   )
 
 #name of shared libarary LIB
@@ -30,6 +32,8 @@ set (SRCS_DICT
   src/StUPCRpsTrack.cxx
   src/StUPCRpsTrackPoint.cxx
   src/StUPCRpsCluster.cxx
+  src/StPicoPhysicalHelix.cxx 
+  src/StPicoHelix.cxx 
   )
 
 #LinkDef file for ROOT dictionary
