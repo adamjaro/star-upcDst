@@ -24,6 +24,8 @@ class StUPCMakerFromPicoDst: public StMaker {
   Int_t Make();
   Int_t Finish();
 
+  void addTriggerId(UInt_t id);
+
  private:
 
   void setUpcTrackFromPicoTrack(StUPCTrack *utrk, StPicoTrack *ptrk, bool writeBemc=false);
@@ -42,6 +44,9 @@ class StUPCMakerFromPicoDst: public StMaker {
 
   TH1I *mCounter; // analysis counter
   enum EvtCount{ kAna=1, kWritten, kMaxCnt };
+
+  //table of trigger IDs
+  vector<UInt_t> mTrgIDs; // trigger IDs
 
   StUPCEvent *mUPCEvent; // output UPC event
   TTree *mUPCTree; // output tree

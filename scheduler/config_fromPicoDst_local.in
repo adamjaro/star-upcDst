@@ -5,11 +5,11 @@ macro RunFromPicoDst.C
 
 top /star/u/truhlar/picoDstReader/test/star-upcDst/test
 
-add_input test_dd /star/u/truhlar/picoDstReader/test/star-upcDst/utils/test.list
+add_input test_1 /star/u/truhlar/picoDstReader/test/star-upcDst/utils/test.list
 
-#submit local
+submit local
 
-outfile cep+v0.root
+outfile test1.root
 
 outdir out
 

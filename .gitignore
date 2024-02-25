@@ -7,11 +7,13 @@ StRoot/
 temp_gccflags.c
 *.list
 *.dataset
+*.dataset.tmp
 *.zip
 *.package
 *.session.xml
 submit_*.xml
 txt/
+scheduler/.nfs*
 *.log
 *.sh~
 *.py~

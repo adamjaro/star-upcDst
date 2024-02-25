@@ -114,7 +114,7 @@ if __name__ == "__main__":
             line = re.sub(r"__STAR_VERSION__", star_version, line)
             if q[1].find(".list") < 0:
                 #input is catalog query
-                line = re.sub(r"__INPUT__", in_query[0]+q[1]+in_query[1], line)
+                line = re.sub(r"__INPUT__", in_query[0]+q[1]+q[0]+in_query[1], line)
             else:
                 #input is from filelist
                 line = re.sub(r"__INPUT__", in_list[0]+q[1]+in_list[1], line)

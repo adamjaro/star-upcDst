@@ -93,11 +93,24 @@ Int_t StUPCMakerFromPicoDst::Init() {
 Int_t StUPCMakerFromPicoDst::Make() {
 
   //cout << "StUPCMakerFromPicoDst::Make" << endl;
-
-  mUPCEvent->clearEvent(); //clear the output UPC event
-
   mPicoDst = mPicoDstMaker->picoDst(); // get input picoDst event
 
+  const StPicoEvent* mPicoEvent = mPicoDst->event();
+
+  Bool_t isTrg = kFALSE; //determine whether at least one of trigger IDs was fired
+  for(UInt_t i=0; i<mTrgIDs.size(); i++) {
+    // run range for a given trigger ID
+    if( !mPicoEvent->isTrigger( mTrgIDs[i] ) ) 
+      continue;
+
+    isTrg = kTRUE;
+    break;
+  }
+  if( !isTrg ) 
+    return kStOk;
+ 
+
+  mUPCEvent->clearEvent(); //clear the output UPC event
   mCounter->Fill( kAna ); // analyzed events
 
   //tracks in event
@@ -124,17 +137,17 @@ Int_t StUPCMakerFromPicoDst::Make() {
 
   //run number and event number
   // beam line parametrs have to be set before v0 selection
-  mUPCEvent->setRunNumber( mPicoDst->event()->runId() );
-  mUPCEvent->setEventNumber( mPicoDst->event()->eventId() );
-  mUPCEvent->setBunchCrossId( mPicoDst->event()->bunchId() ); // set bunch Id for the merger
+  mUPCEvent->setRunNumber( mPicoEvent->runId() );
+  mUPCEvent->setEventNumber( mPicoEvent->eventId() );
+  mUPCEvent->setBunchCrossId( mPicoEvent->bunchId() ); // set bunch Id for the merger
 
   readBeamLine();
 
   //magnetic field
-  mUPCEvent->setMagneticField(mPicoDst->event()->bField());
+  mUPCEvent->setMagneticField(mPicoEvent->bField());
 
   //select tracks from V0 candidates
-  TVector3 vertex = mPicoDst->event()->primaryVertex();
+  TVector3 vertex = mPicoEvent->primaryVertex();
   int nsel = mSelectV0->selectTracks(upcTracks, trackFilter, mUPCEvent, vertex);
   nsel += mSelectCEP->selectTracks(mPicoDst, trackFilter);
   
@@ -328,7 +341,14 @@ double StUPCMakerFromPicoDst::calculateTofPathLength(const TVector3 beginPoint, 
   return value;
 }//calculateTofPathLength
 
+//_____________________________________________________________________________
+void StUPCMakerFromPicoDst::addTriggerId(UInt_t id) {
 
+  //add triggger ID to the table of IDs
+
+  mTrgIDs.push_back(id);
+
+}//StUPCMakerFromPicoDst::addTriggerId
 
 
 

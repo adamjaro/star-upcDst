@@ -1,6 +1,10 @@
 
 #include "TArgumentParser.h"
 
+class StUPCMakerFromPicoDst;
+StUPCMakerFromPicoDst *anaMaker;
+void AddTrigger(UInt_t id);
+
 //_____________________________________________________________________________
 void RunFromPicoDst(string filelist, Int_t nFiles, string outfile, string config) {
 //void RunFromPicoDst() {
@@ -32,6 +36,7 @@ void RunFromPicoDst(string filelist, Int_t nFiles, string outfile, string config
   //load the analysis maker compiled before with cons
   gSystem->Load("StUPCFilterMaker.so");
 
+
   //create chain directory-like structure for maker
   //top level
   StChain *chain = new StChain();
@@ -39,7 +44,15 @@ void RunFromPicoDst(string filelist, Int_t nFiles, string outfile, string config
   StPicoDstMaker *picoDstMaker = new StPicoDstMaker(StPicoDstMaker::IoRead, filelist.c_str());
 
   //analysis maker
-  StUPCMakerFromPicoDst *anaMaker = new StUPCMakerFromPicoDst(picoDstMaker, outfile);
+  anaMaker = new StUPCMakerFromPicoDst(picoDstMaker, outfile);
+
+
+  //load values from config file
+  TArgumentParser parser;
+  parser.AddFuncInt3("add_trigger", AddTrigger);
+
+  cout << "RunFromPicoDst, using config from: " << config << endl;
+  parser.Parse(config);
 
   //initialize the makers
   chain->Init();
@@ -82,3 +95,11 @@ void PrintFilelist(const string& filelist) {
 }//PrintFilelist
 
 
+//_____________________________________________________________________________
+void AddTrigger(UInt_t id, Int_t rmin, Int_t rmax) {
+
+  //wrapper function to call maker::addTriggerId
+
+  anaMaker->addTriggerId(id);
+
+}//AddTrigger
