@@ -23,8 +23,8 @@ int StUPCSelectV0::selectTracks(vector<StUPCTrack>& tracks, std::vector<UChar_t>
   double bField = upcEvent->getMagneticField();
   double beamline[4]; 
   beamline[0] = upcEvent->getBeamXPosition();
-  beamline[1] = upcEvent->getBeamXSlope();
-  beamline[2] = upcEvent->getBeamYPosition();
+  beamline[2] = upcEvent->getBeamXSlope();
+  beamline[1] = upcEvent->getBeamYPosition();
   beamline[3] = upcEvent->getBeamYSlope();
 
   //outer tracks loop
@@ -70,20 +70,20 @@ int StUPCSelectV0::selectTracks(vector<StUPCTrack>& tracks, std::vector<UChar_t>
       StUPCV0 K0(&track1,&track2, massPion, massPion, itrk, jtrk, vertex, beamline, bField, false);
 
       // the same cut for K0 and Lambda
-      if ( !(K0.dcaDaughters() < 2.0 && K0.DCABeamLine() < 2.0 && (K0.pointingAngleHypo()>0.9 || K0.decayLengthHypo()<3.0) ) )
+      if ( !(K0.dcaDaughters() < 3.0 && K0.DCABeamLine() < 2.5 && (K0.pointingAngleHypo()>0.9 || K0.decayLengthHypo()<3.0) ) )
         continue;
 
-      if ( abs(K0.m()-0.495) < 0.035 ) // it's a K0
+      if ( abs(K0.m()-0.495) < 0.05 ) // it's a K0
         V0Candidate = true;
 
       // check if pair is Lambda/LambdaBar
       StUPCV0 L01(&track1,&track2, massPion, massProton, itrk, jtrk, vertex, beamline, bField, false);
-      if ( abs(L01.m()-1.115) < 0.015 ) // it's a Lambda/LambdaBar
+      if ( abs(L01.m()-1.115) < 0.02 ) // it's a Lambda/LambdaBar
         V0Candidate = true;
 
       // check if pair is LambdaBar/Lambda
       StUPCV0 L02(&track1,&track2, massProton, massPion, itrk, jtrk, vertex, beamline, bField, false);
-      if ( abs(L02.m()-1.115) < 0.015 ) // it's a LambdaBar/Lambda
+      if ( abs(L02.m()-1.115) < 0.02 ) // it's a LambdaBar/Lambda
         V0Candidate = true;
 
       if ( !V0Candidate ) // it is not a V0 canidate, discard the pair
